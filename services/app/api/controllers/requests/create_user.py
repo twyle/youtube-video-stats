@@ -9,7 +9,7 @@ class CreateUserRequest(APIRequest):
         registration_data = self.get_request_data()
         create_user_validator = CreateUserValidator()
         data = create_user_validator.validate(registration_data)
-        return registration_data
+        return data
         
     def get_request_data(self) -> dict[str, str]:
         form = self.__api_request.form
