@@ -10,10 +10,6 @@ def create_app() -> Flask:
     register_extensions(app)
     register_blueprints(app)
     
-    @app.route('/')
-    def home():
-        return 'hello from home.'
-    
     app.shell_context_processor({"app": app})
 
     return app
