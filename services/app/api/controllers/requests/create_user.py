@@ -1,18 +1,14 @@
 from .api_request import APIRequest
-from ..validators.validator_factory import CreateUserValidator
+from ..validators.validator_factory import ValidatorFactory
 
-class CreateUserRequest(APIRequest):
-    def __init__(self, api_request) -> None:
-        self.__api_request = api_request
-        
-    def __call__(self) -> dict[str, str]:
-        registration_data = self.get_request_data()
-        create_user_validator = CreateUserValidator()
-        data = create_user_validator.validate(registration_data)
+class CreateUserRequest(APIRequest):        
+    def __call__(self, api_request, request_data_validator: ValidatorFactory) -> dict[str, str]:
+        registration_data = self.get_request_data(api_request)
+        data = request_data_validator.validate(registration_data)
         return data
         
-    def get_request_data(self) -> dict[str, str]:
-        form = self.__api_request.form
+    def get_request_data(self, api_request) -> dict[str, str]:
+        form = api_request.form
         first_name = form.get('First Name', '')
         last_name = form.get('Last Name', '')
         email_address = form.get('Email Address', '')
