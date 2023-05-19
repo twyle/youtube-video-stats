@@ -8,10 +8,19 @@ class ValidatorFactory(Protocol):
         
 class DataValidatorList:
     def __init__(self, data_validators: Optional[list[DataValidator]]) -> None:
-        self.__validators = []
+        self.__first_validator = None
+        for validator in data_validators:
+            self.add_validator(validator)
         
     def add_validator(self, validator: DataValidator) -> None:
-        pass
+        if not self.__first_validator:
+            self.__first_validator = validator
+        else:
+            current = self.__first_validator
+            while current.next_validator:
+                next_validator = current.next_validator
+                current = next_validator
+            current.next_validator = validator
     
     def remove_validator(self, validator: DataValidator) -> DataValidator:
         pass
@@ -19,8 +28,9 @@ class DataValidatorList:
     def insert_validator(self, existing_validator: DataValidator, new_validator: DataValidator) -> None:
         pass
     
-    def __call__(self) -> dict:
-        pass
+    def __call__(self, data: dict) -> dict:
+        if self.__first_validator:
+            self.__first_validator(data) 
 class CreateUserValidator:
     def validate(self, data: dict) -> dict:
         password_match = PasswordMatchValidator(None)

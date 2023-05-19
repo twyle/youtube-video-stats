@@ -1,7 +1,8 @@
 from .validator import DataValidator
+from typing import Optional
 
 class NameValidator(DataValidator):
-    def __init__(self, next_validator: DataValidator, attr: str) -> None:
+    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = '') -> None:
         self.__next_validator = next_validator
         self.__attr = attr
         
@@ -10,6 +11,14 @@ class NameValidator(DataValidator):
         if self.__next_validator:
             self.__next_validator(data)
         return data
+    
+    @property
+    def next_validator(self) -> DataValidator:
+        return self.__next_validator
+    
+    @next_validator.setter
+    def next_validator(self, next_validator: DataValidator):
+        self.__next_validator = next_validator
     
     def validate(self, data: dict) -> dict:
         print(f'Validating {self.__attr} name')
