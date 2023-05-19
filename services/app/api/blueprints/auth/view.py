@@ -1,24 +1,37 @@
 from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.requests.create_user import CreateUserRequest
-from ...controllers.validators.validator_factory import CreateUserValidator
-from ...controllers.response.create_user_response import CreateUserResponseBuilder
+from ...controllers.request_builders.create_user_request_builder import CreateUserRequestBuilder
+from ...controllers.data_validators.validator_factory import DataValidatorList
+from ...controllers.response_builders.create_response import ResponseBuilder
+from ...controllers.data_validators.data_validators import (
+    NameValidator, EmailValidator, PasswordValidator, PasswordMatchValidator
+)
+from ...controllers.controllers.register_user_controller import RegisterUserController
 
 auth = Blueprint('auth', __name__)
 
 @swag_from('./docs/register.yml', endpoint='auth.register_client', methods=['POST'])
 @auth.route('/register', methods=['POST'])
 def register_client():
-    request_data_validator = CreateUserValidator()
-    create_user_request = CreateUserRequest()
-    create_user_builder = CreateUserResponseBuilder()
+    validators = [
+        NameValidator(attr='first_name'),
+        NameValidator(attr='last_name'),
+        EmailValidator(),
+        PasswordValidator(),
+        PasswordMatchValidator()
+    ]
+    request_data_validators = DataValidatorList(validators)
+    create_user_request_builder = CreateUserRequestBuilder()
+    register_user_controller = RegisterUserController()
+    create_user_builder = ResponseBuilder()
     api_response = (
-        create_user_builder.with_create_user_data_validator(request_data_validator)
-        .with_create_user_request(create_user_request)
+        create_user_builder.with_data_validators(request_data_validators)
+        .with_request_builder(create_user_request_builder)
         .with_request_object(request)
+        .with_controller(register_user_controller)
         .build()
     )
-    return api_response()
+    return api_response
 
 
 @swag_from('./docs/confirm_email.yml', endpoint='auth.confirm_client_email', methods=['GET'])

@@ -1,21 +1,20 @@
 from .controller import Controller
-from ..requests.api_request import APIRequest
-from ..validators.validator_factory import ValidatorFactory
+from ..request_builders.request_builder import RequestBuilder
+from ..data_validators.validator_factory import ValidatorList
+from flask import Request
 
-class RegisterUserController(Controller):  
-    def __init__(self, api_request: APIRequest, request_data_val: ValidatorFactory, request_object) -> None:
-        self.__api_request = api_request
-        self.__request_data_val = request_data_val
-        self.__request_object = request_object
-                    
-    def __call__(self) -> tuple[dict, int]:
+class RegisterUserController(Controller):                     
+    def __call__(self, request_builder: RequestBuilder, data_validators: ValidatorList, 
+                 request_object: Request) -> tuple[dict, int]:
         try:
-            api_request_data = self.handle_request()
+            api_request_data = self.handle_request(request_builder, data_validators, 
+                                                   request_object)
         except ValueError:
             return {'error': 'No such user'}, 404
         else:
             return api_request_data, 201
         
-    def handle_request(self) -> tuple[dict, int]:
-        api_request_data = self.__api_request(self.__request_object, self.__request_data_val)
+    def handle_request(self, request_builder: RequestBuilder, data_validators: ValidatorList, 
+                 request_object: Request) -> tuple[dict, int]:
+        api_request_data = request_builder(request_object, data_validators)
         return api_request_data

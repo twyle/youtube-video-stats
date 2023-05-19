@@ -1,14 +1,15 @@
-from .api_request import APIRequest
-from ..validators.validator_factory import ValidatorFactory
+from .request_builder import RequestBuilder
+from ..data_validators.validator_factory import ValidatorList
+from flask import Request
 
-class CreateUserRequest(APIRequest):        
-    def __call__(self, api_request, request_data_validator: ValidatorFactory) -> dict[str, str]:
-        registration_data = self.get_request_data(api_request)
-        data = request_data_validator.validate(registration_data)
+class CreateUserRequestBuilder(RequestBuilder):        
+    def __call__(self, request_object: Request, request_data_validator: ValidatorList) -> dict[str, str]:
+        registration_data = self.get_request_data(request_object)
+        data = request_data_validator(registration_data)
         return data
         
-    def get_request_data(self, api_request) -> dict[str, str]:
-        form = api_request.form
+    def get_request_data(self, request_object: Request) -> dict[str, str]:
+        form = request_object.form
         first_name = form.get('First Name', '')
         last_name = form.get('Last Name', '')
         email_address = form.get('Email Address', '')

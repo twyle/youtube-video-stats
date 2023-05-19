@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from flask import request
+from flask import Request
+from ..data_validators.validator_factory import ValidatorList
 
-class APIRequest(ABC):
+class RequestBuilder(ABC):
     @abstractmethod
-    def __call__(self) -> dict[str, str]:
+    def __call__(self, request_object: Request, request_data_validator: ValidatorList) -> dict[str, str]:
         pass
         
     @abstractmethod
