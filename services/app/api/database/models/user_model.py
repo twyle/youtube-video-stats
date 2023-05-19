@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import datetime as dt
+from typing import Optional
 
 @dataclass
 class User:
@@ -7,5 +8,6 @@ class User:
     last_name: str
     email_address: str
     password: str
-    date_registered: dt.datetime
-    date_updated: dt.datetime
+    date_registered: Optional[dt.datetime] = field(default_factory=dt.datetime.now)
+    date_updated: Optional[dt.datetime] = field(default_factory=dt.datetime.now)
+    id: Optional[int] = None

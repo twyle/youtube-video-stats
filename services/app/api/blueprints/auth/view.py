@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.controllers.register_user_controller import RegisterUserController
 from ...controllers.requests.create_user import CreateUserRequest
 from ...controllers.validators.validator_factory import CreateUserValidator
 from ...controllers.response.create_user_response import CreateUserResponseBuilder
@@ -12,7 +11,6 @@ auth = Blueprint('auth', __name__)
 def register_client():
     request_data_validator = CreateUserValidator()
     create_user_request = CreateUserRequest()
-    # register_user_controller = RegisterUserController(create_user_request, request_data_validator)
     create_user_builder = CreateUserResponseBuilder()
     api_response = (
         create_user_builder.with_create_user_data_validator(request_data_validator)
