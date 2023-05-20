@@ -1,11 +1,11 @@
 from .base_repository import BaseRepository
-from typing import Any
+from typing import Any, Optional
 from ..models.user_model import User
+from sqlite3 import IntegrityError
 
 class SQLiteUserRepository(BaseRepository[User]):
-    def __init__(self, connection: Any) -> None:
+    def __init__(self, connection: Optional[Any] = None) -> None:
         self.__connection = connection
-        self.__create_table()
         
     @property
     def connection(self) -> Any:
@@ -14,8 +14,8 @@ class SQLiteUserRepository(BaseRepository[User]):
     @connection.setter
     def connection(self, connection: Any) -> None:
         self.__connection = connection
-        
-        
+        self.__create_table()
+              
     def __create_table(self) -> None:
         cursor = self.connection.cursor()
         cursor.execute(
@@ -35,14 +35,18 @@ class SQLiteUserRepository(BaseRepository[User]):
         
     def add(self, user: User) -> User:
         cursor = self.connection.cursor()
-        cursor.execute(
-        """
-        INSERT INTO users (first_name, last_name, email_address, password, date_registered) VALUES (?, ?, ?, ?, ?)
-        """,
-        (user.first_name, user.last_name, user.email_address, user.password, user.date_registered)
-        )
-        user.id = cursor.lastrowid
-        return user
+        try:
+            cursor.execute(
+            """
+            INSERT INTO users (first_name, last_name, email_address, password, date_registered) VALUES (?, ?, ?, ?, ?)
+            """,
+            (user.first_name, user.last_name, user.email_address, user.password, user.date_registered)
+            )
+        except IntegrityError as e:
+            raise ValueError('The user already exists.') from e
+        else:
+            user.id = cursor.lastrowid
+            return user
         
     def get_by_id(self, user_id: int) -> User:
         cursor = self.connection.cursor()
@@ -55,11 +59,11 @@ class SQLiteUserRepository(BaseRepository[User]):
         row = cursor.fetchone()
         if row:
             return User(
-                id=row[1],
-                first_name=row[2],
-                last_name=row[3],
-                email_address=row[4],
-                password=row[5]
+                id=row[0],
+                first_name=row[1],
+                last_name=row[2],
+                email_address=row[3],
+                password=row[4]
             )
         return None
     
@@ -69,7 +73,7 @@ class SQLiteUserRepository(BaseRepository[User]):
         """
         UPDATE users SET first_name=?, last_name=?, email_address=?, password=? WHERE id=?
         """,
-        (user.first_name, user.last_name, user.email_address, user.password)
+        (user.first_name, user.last_name, user.email_address, user.password, user.id)
         )
         return user
     

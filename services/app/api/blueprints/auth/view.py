@@ -7,6 +7,11 @@ from ...controllers.data_validators.data_validators import (
     NameValidator, EmailValidator, PasswordValidator, PasswordMatchValidator
 )
 from ...controllers.controllers.register_user_controller import RegisterUserController
+from ...database.builder.user_builder import CreateUserRequestHandler
+from ...database.connections import create_sqlite_database_connection
+from ...database.repositories.sqlite_repository import SQLiteUserRepository
+from ...database.repositories.user_unit_of_work import UserUnitOfWork
+from ...database.usecases.create_user import CreateUserUseCase
 
 auth = Blueprint('auth', __name__)
 
@@ -24,10 +29,16 @@ def register_client():
     create_user_request_builder = CreateUserRequestBuilder()
     register_user_controller = RegisterUserController()
     create_user_builder = ResponseBuilder()
+    sqlite_repository = SQLiteUserRepository()
+    unit_of_work = UserUnitOfWork()
+    create_user_use_case = CreateUserUseCase()
+    create_user_request_handler = CreateUserRequestHandler(create_sqlite_database_connection, 
+                sqlite_repository, unit_of_work, create_user_use_case)
     api_response = (
         create_user_builder.with_data_validators(request_data_validators)
         .with_request_builder(create_user_request_builder)
         .with_request_object(request)
+        .with_request_handler(create_user_request_handler)
         .with_controller(register_user_controller)
         .build()
     )

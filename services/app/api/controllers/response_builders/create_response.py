@@ -3,7 +3,7 @@ from ..controllers.controller import Controller
 from ..data_validators.validator_factory import ValidatorList
 from .create_response_base import ResponseBuilderBase
 from flask import Request
-from ..controllers.register_user_controller import RegisterUserController
+from ...database.builder.user_builder import RequestHandler
 
 class ResponseBuilder(ResponseBuilderBase):    
     def __init__(self) -> None:
@@ -28,12 +28,16 @@ class ResponseBuilder(ResponseBuilderBase):
         self.__request_object = request_object
         return self
     
+    def with_request_handler(self, request_handler: RequestHandler):
+        self.__request_handler = request_handler
+        return self
+    
     def build(self):
         if (not self.__data_validators or not self.__request_builder or not 
             self.__request_object or not self.__controller):
             raise ValueError('All the dependencies must be provided before building the use case.')
         return self.__controller(
-            self.__request_builder, self.__data_validators, self.__request_object
+            self.__request_builder, self.__data_validators, self.__request_object, self.__request_handler
         )
     
     
