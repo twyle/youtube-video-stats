@@ -43,7 +43,7 @@ parameters:
           example: "TTT"
         views_count:
           type: "int"
-          example: 200000
+          example: 200000 
         likes_count:
           type: "int"
           example: 5200

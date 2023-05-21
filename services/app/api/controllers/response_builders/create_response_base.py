@@ -2,7 +2,7 @@ from ..data_validators.validator_factory import ValidatorList
 from ..request_builders.request_builder import RequestBuilder
 from abc import ABC, abstractmethod
 from flask import Request
-from ..controllers.controller import Controller
+from ..controllers.base_controller import BaseController
 
 
 class ResponseBuilderBase(ABC):  
@@ -15,7 +15,7 @@ class ResponseBuilderBase(ABC):
         raise NotImplementedError()
     
     @abstractmethod
-    def with_controller(self, controller: Controller):
+    def with_controller(self, controller: BaseController):
         raise NotImplementedError()
     
     @abstractmethod

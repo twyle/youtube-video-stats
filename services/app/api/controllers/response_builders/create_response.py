@@ -1,5 +1,5 @@
 from ..request_builders.request_builder import RequestBuilder
-from ..controllers.controller import Controller
+from ..controllers.base_controller import BaseController
 from ..data_validators.validator_factory import ValidatorList
 from .create_response_base import ResponseBuilderBase
 from flask import Request
@@ -20,7 +20,7 @@ class ResponseBuilder(ResponseBuilderBase):
         self.__request_builder = request_builder
         return self
     
-    def with_controller(self, controller: Controller):
+    def with_controller(self, controller: BaseController):
         self.__controller = controller
         return self
     

@@ -1,8 +1,9 @@
 from typing import Any
-from .factories import RequestHandlerFactoryProtocol
+from .request_handler_base import RequestHandlerBase
+from .factories import RequestHandlerFactory
     
-class RequestHandler:
-    def __init__(self, factory: RequestHandlerFactoryProtocol) -> None:
+class RequestHandler(RequestHandlerBase):
+    def __init__(self, factory: RequestHandlerFactory) -> None:
         self.__connection = factory.get_database_connection()
         self.__repository = factory.get_repository()
         self.__unit_of_work = factory.get_unit_of_work()
