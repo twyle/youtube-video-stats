@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from ..request_builders.request_builder import RequestBuilder
 from ..data_validators.validator_factory import ValidatorList
 from flask import Request
-from ...database.builder.user_builder import RequestHandler
+from ...database.request_handler.request_handler import RequestHandler
 
 
 class Controller(ABC):                

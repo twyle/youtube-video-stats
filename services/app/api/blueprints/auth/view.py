@@ -1,45 +1,21 @@
 from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.request_builders.create_user_request_builder import CreateUserRequestBuilder
-from ...controllers.data_validators.validator_factory import DataValidatorList
 from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.data_validators.data_validators import (
-    NameValidator, EmailValidator, PasswordValidator, PasswordMatchValidator
-)
-from ...controllers.controllers.register_user_controller import RegisterUserController
-from ...database.builder.user_builder import CreateUserRequestHandler
-from ...database.connections import create_sqlite_database_connection
-from ...database.repositories.sqlite_repository import SQLiteUserRepository
-from ...database.repositories.user_unit_of_work import UserUnitOfWork
-from ...database.usecases.create_user import CreateUserUseCase
+from ...controllers.create_user_controller_factory import CreateUserControllerFactory
 
 auth = Blueprint('auth', __name__)
 
 @swag_from('./docs/register.yml', endpoint='auth.register_client', methods=['POST'])
 @auth.route('/register', methods=['POST'])
 def register_client():
-    validators = [
-        NameValidator(attr='first_name'),
-        NameValidator(attr='last_name'),
-        EmailValidator(),
-        PasswordValidator(),
-        PasswordMatchValidator()
-    ]
-    request_data_validators = DataValidatorList(validators)
-    create_user_request_builder = CreateUserRequestBuilder()
-    register_user_controller = RegisterUserController()
+    create_user_controller = CreateUserControllerFactory()
     create_user_builder = ResponseBuilder()
-    sqlite_repository = SQLiteUserRepository()
-    unit_of_work = UserUnitOfWork()
-    create_user_use_case = CreateUserUseCase()
-    create_user_request_handler = CreateUserRequestHandler(create_sqlite_database_connection, 
-                sqlite_repository, unit_of_work, create_user_use_case)
     api_response = (
-        create_user_builder.with_data_validators(request_data_validators)
-        .with_request_builder(create_user_request_builder)
+        create_user_builder.with_data_validators(create_user_controller.get_request_data_validator())
+        .with_request_builder(create_user_controller.get_request_builder())
         .with_request_object(request)
-        .with_request_handler(create_user_request_handler)
-        .with_controller(register_user_controller)
+        .with_request_handler(create_user_controller.get_request_handler())
+        .with_controller(create_user_controller.get_controller())
         .build()
     )
     return api_response

@@ -2,8 +2,7 @@ from .controller import Controller
 from ..request_builders.request_builder import RequestBuilder
 from ..data_validators.validator_factory import ValidatorList
 from flask import Request
-from ...database.builder.user_builder import RequestHandler
-import dataclasses
+from ...database.request_handler.request_handler import RequestHandler
 
 class RegisterUserController(Controller):                     
     def __call__(self, request_builder: RequestBuilder, data_validators: ValidatorList, 
@@ -20,4 +19,4 @@ class RegisterUserController(Controller):
                  request_object: Request, request_handler: RequestHandler) -> tuple[dict, int]:
         api_request_data = request_builder(request_object, data_validators)
         data = request_handler(api_request_data)
-        return dataclasses.asdict(data)
+        return data

@@ -1,12 +1,32 @@
 from typing import Any, Optional
 from .base_repository import BaseRepository
 from ..models.user_model import User
+from abc import ABC, abstractmethod
 
-class UserUnitOfWork:
+
+class BaseUnitfWork(ABC):
+    @abstractmethod
+    def __enter__(self):
+        pass
+    
+    @abstractmethod
+    def __exit__(self, exec_type, exec_val, exec_tb):
+        pass
+      
+    @abstractmethod       
+    def commit(self):
+        pass
+    
+    @abstractmethod    
+    def rollback(self):
+        pass
+    
+    
+class UnitOfWork(BaseUnitfWork):
     def __init__(self, connection: Optional[Any] = None, 
-                 user_repository: Optional[BaseRepository[User]] = None) -> None:
+                 repository: Optional[BaseRepository[User]] = None) -> None:
         self.__connection = connection
-        self.__users = user_repository
+        self.__repositrory = repository
         
     @property
     def connection(self):
@@ -17,12 +37,12 @@ class UserUnitOfWork:
         self.__connection = connection
         
     @property
-    def users(self):
-        return self.__users
+    def repository(self):
+        return self.__repositrory
     
-    @users.setter
-    def users(self, users):
-        self.__users = users
+    @repository.setter
+    def repository(self, repository: BaseRepository[User]):
+        self.__repositrory = repository
         
     def __enter__(self):
         return self
