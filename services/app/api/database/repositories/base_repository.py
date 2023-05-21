@@ -25,3 +25,11 @@ class BaseRepository(ABC, Generic[T]):
     def get_by_id(self, item_id: int) -> T:
         """Retrieve an item by its id from the repository."""
         raise NotImplementedError()
+    
+    @abstractmethod
+    def list_all(self) -> list[T]:
+        """Retrieve all the items in the repository."""
+    
+    @abstractmethod    
+    def query(self, query_string: str) -> list[T]:
+        """Retrieve itesm based on a custom query."""

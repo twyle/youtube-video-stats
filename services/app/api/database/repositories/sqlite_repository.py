@@ -77,10 +77,47 @@ class SQLiteUserRepository(BaseRepository[User]):
         )
         return user
     
-    def delete(self, user_id: int) -> User:
+    def delete(self, user_id: int) -> None:
         cursor = self.connection.cursor()
         cursor.execute(
             """DELETE FROM users WHERE id=?""",
             (user_id,)
         )
         
+    def list_all(self) -> list[User]:
+        cursor = self.connection.cursor()
+        cursor.execute(
+        """
+        SELECT * FROM users
+        """
+        )
+        rows = cursor.fetchall()
+        if rows:
+            users = [
+                User(
+                    id=row[0],
+                    first_name=row[1],
+                    last_name=row[2],
+                    email_address=row[3],
+                    password=row[4]
+                )
+                for row in rows
+            ]
+        return users if users else []
+    
+    def query(self, query_string: str) -> list[User]:
+        cursor = self.connection.cursor()
+        cursor.execute(query_string)
+        rows = cursor.fetchall()
+        if rows:
+            users = [
+                User(
+                    id=row[0],
+                    first_name=row[1],
+                    last_name=row[2],
+                    email_address=row[3],
+                    password=row[4]
+                )
+                for row in rows
+            ]
+        return users if users else []

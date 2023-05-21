@@ -3,6 +3,7 @@ from ..models.user_model import User
 from typing import Optional, Any
 import dataclasses
 from .use_case import UseCase
+from flask import jsonify
 
 class CreateUserUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -59,3 +60,13 @@ class UpdateUserUseCase(UseCase):
                 user.password = data.get('password')
             uow.repository.update(user)
         return dataclasses.asdict(user)
+    
+    
+class GetAllUsersUseCase(UseCase):
+    def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
+        super().__init__(unit_of_work)
+        
+    def execute(self, data: dict[str, Any]) -> dict[str, Any]:
+        with self.unit_of_work as uow:
+            users = uow.repository.list_all()
+        return jsonify(users)
