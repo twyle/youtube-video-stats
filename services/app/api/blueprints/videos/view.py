@@ -2,10 +2,26 @@ from flask import Blueprint, request
 from flasgger import swag_from
 from ...controllers.list_channels_controller_factory import ListChannelsControllerFactory
 from ...controllers.response_builders.create_response import ResponseBuilder
+from ...controllers.add_video_controller_factory import AddVideoControllerFactory
 
 
 videos = Blueprint('videos', __name__)
 
+
+@swag_from('./docs/add.yml', endpoint='videos.add', methods=['POST'])
+@videos.route('/add', methods=['POST'])
+def add():
+    add_video_controller = AddVideoControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(add_video_controller.get_request_data_validator())
+        .with_request_builder(add_video_controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(add_video_controller.get_request_handler())
+        .with_controller(add_video_controller.get_controller())
+        .build()
+    )
+    return api_response
 
 @swag_from('./docs/channels.yml', endpoint='videos.list_all_channels', methods=['GET'])
 @videos.route('/channels', methods=['GET'])

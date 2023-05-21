@@ -1,0 +1,58 @@
+description: Add a Video.
+tags:
+  - Videos
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+parameters:
+  - name: body
+    description: The body should contain the video id.
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "video_id"
+        - "video_title"
+        - "channel_title"
+        - "video_description"
+        - "video_thumbnail"
+        - "video_duration"
+        - "views_count"
+        - "likes_count"
+        - "comments_count"
+      properties:
+        video_id:
+          type: "string"
+          example: "HU6LfXNeQM4"
+        video_title:
+          type: "string"
+          example: "Your Brain: Perception Deception | Full Documentary | NOVA | PBS"
+        channel_title:
+          type: "string"
+          example: "Channel Title"
+        video_description:
+          type: "string"
+          example: "Video Description."
+        video_thumbnail:
+          type: "string"
+          example: "HU6LfXNeQM4"
+        video_duration:
+          type: "string"
+          example: "TTT"
+        views_count:
+          type: "int"
+          example: 200000
+        likes_count:
+          type: "int"
+          example: 5200
+        comments_count:
+          type: "int"
+          example: 391
+responses:
+  200:
+    description: When the confirmation email is successffuly sent
+
+  400:
+    description: Fails to update user due to bad request data
