@@ -3,7 +3,8 @@ from flasgger import swag_from
 from ...controllers.response_builders.create_response import ResponseBuilder
 from ...controllers.controllers.video_controller_factory import (
     AddVideoControllerFactory, GetVideoControllerFactory, UpdateVideoControllerFactory, 
-    DeleteVideoControllerFactory, GetVideosControllerFactory
+    DeleteVideoControllerFactory, GetVideosControllerFactory, AddManyVideosControllerFactory,
+    QueryVideosControllerFactory
 )
 
 
@@ -14,6 +15,21 @@ videos = Blueprint('videos', __name__)
 @videos.route('/video', methods=['POST'])
 def add():
     controller = AddVideoControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
+
+@swag_from('./docs/add_many.yml', endpoint='videos.add_many', methods=['POST'])
+@videos.route('/', methods=['POST'])
+def add_many():
+    controller = AddManyVideosControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -75,6 +91,22 @@ def delete():
 @videos.route('/', methods=['GET'])
 def list_all():
     controller = GetVideosControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
+
+
+@swag_from('./docs/advanced_search.yml', endpoint='videos.advanced_search', methods=['POST'])
+@videos.route('/advanced', methods=['POST'])
+def advanced_search():
+    controller = QueryVideosControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())

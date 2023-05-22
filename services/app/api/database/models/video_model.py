@@ -13,3 +13,4 @@ class Video:
     likes_count: int
     comments_count: int
     id: Optional[int] = None
+    

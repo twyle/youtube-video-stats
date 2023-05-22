@@ -5,6 +5,7 @@ import dataclasses
 from .use_case import UseCase
 from flask import jsonify
 from ..models.video_model import Video
+from .queries import QueryMixin
 
 class AddVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -85,5 +86,53 @@ class GetVideosUseCase(UseCase):
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            videos = uow.repository.list_all()
+            sort_field = 'id'
+            limit = 10
+            offset = 0
+            sort_order = 'ASC'
+            if data.get('sort_field'):
+                sort_field = data.get('sort_field')
+            if data.get('limit'):
+                limit = data.get('limit')
+            if data.get('offset'):
+                offset = data.get('offset')
+            if data.get('sort_order'):
+                sort_order = data.get('sort_order')
+            videos = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
+                                             sort_order=sort_order)
         return jsonify(videos)
+    
+    
+class AddManyVideoUseCase(UseCase):
+    def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
+        super().__init__(unit_of_work)
+        
+    def execute(self, data: dict[str, Any]) -> dict[str, Any]:
+        with self.unit_of_work as uow:
+            video_data_list = data['videos']
+            for video_data in video_data_list:
+                video = Video(
+                    video_id=video_data['video_id'],
+                    video_title=video_data['video_title'],
+                    channel_title=video_data['channel_title'],
+                    video_description=video_data['video_description'],
+                    video_thumbnail=video_data['video_thumbnail'],
+                    video_duration=video_data['video_duration'],
+                    views_count=video_data['views_count'],
+                    likes_count=video_data['likes_count'],
+                    comments_count=video_data['comments_count']
+                )
+                uow.repository.add(video)
+        return {'Videos Added': f'{len(video_data_list)}'}
+    
+    
+class QueryVideoUseCase(QueryMixin, UseCase):
+    def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
+        super().__init__(unit_of_work)
+        
+    def execute(self, data: dict[str, Any]) -> dict[str, Any]:
+        with self.unit_of_work as uow:
+            print(data)
+            self.print_yay()
+        # return dataclasses.asdict(video)
+        return {'Success': 'Queried database.'}

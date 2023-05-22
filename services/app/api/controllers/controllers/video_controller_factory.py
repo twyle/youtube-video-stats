@@ -3,7 +3,8 @@ from ..data_validators.validator_factory import DataValidatorList
 from ...database.request_handler.request_handler_base import RequestHandlerBase
 from ...database.request_handler.video_factories import (
     AddVideoSQLiteFactory, GetVideoSQLiteFactory, UpdateVideoSQLiteFactory, 
-    DeleteVideoSQLiteFactory, GetVideosSQLiteFactory
+    DeleteVideoSQLiteFactory, GetVideosSQLiteFactory, AddManyVideosSQLiteFactory,
+    QueryVideosSQLiteFactory
 )
 from ...database.request_handler.request_handler import RequestHandler
 
@@ -52,4 +53,22 @@ class GetVideosControllerFactory(BaseControllerFactory):
     
     def get_request_handler(self) -> RequestHandlerBase:
         request_handler_factory = GetVideosSQLiteFactory()
+        return RequestHandler(request_handler_factory)
+    
+class AddManyVideosControllerFactory(BaseControllerFactory):
+    def get_request_data_validator(self) -> DataValidatorList:
+        validators = []
+        return DataValidatorList(validators)
+    
+    def get_request_handler(self) -> RequestHandlerBase:
+        request_handler_factory = AddManyVideosSQLiteFactory()
+        return RequestHandler(request_handler_factory)
+    
+class QueryVideosControllerFactory(BaseControllerFactory):
+    def get_request_data_validator(self) -> DataValidatorList:
+        validators = []
+        return DataValidatorList(validators)
+    
+    def get_request_handler(self) -> RequestHandlerBase:
+        request_handler_factory = QueryVideosSQLiteFactory()
         return RequestHandler(request_handler_factory)

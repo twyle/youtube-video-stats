@@ -1,0 +1,43 @@
+description: Search for videos meeting a set of criteria.
+tags:
+  - Videos
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+parameters:
+  - name: body
+    description: The body should contain the query.
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - "likes_count"
+        - "views_count"
+        - "comments_count"
+      properties:
+        likes_count:
+          type: "object"
+          example: {"gt": 200}
+        views_count:
+          type: "object"
+          example: {"lte": 500}
+        comments_count:
+          type: "object"
+          example: {
+            "lte": 300,
+            "gte": 50
+          }
+        sort:
+          type: "object"
+          example: {
+            "fileds": ["comments_count", "likes_count"],
+            "order": "asc"
+          }
+responses:
+  201:
+    description: WHen the video  is successfully added.
+
+  409:
+    description: Fails to add video since a similar one exists.

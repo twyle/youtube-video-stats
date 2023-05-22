@@ -105,11 +105,12 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         )
     
         
-    def list_all(self) -> list[Video]:
+    def list_all(self, limit: Optional[int] = 2, sort_order: Optional[str] = 'ASC', 
+                 sort_field: Optional[str] = 'id', offset: Optional[int] = 0) -> list[Video]:
         cursor = self.connection.cursor()
         cursor.execute(
-        """
-        SELECT * FROM videos
+        f"""
+        SELECT * FROM videos ORDER BY {sort_field} {sort_order} LIMIT {limit} OFFSET {offset}
         """
         )
         rows = cursor.fetchall()
