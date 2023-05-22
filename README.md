@@ -33,3 +33,7 @@ The application supports the following operations:
 2. Updating user information including the user password.
 3. Listing videos, their likes, views, comments.
 4. Filtering results, pagination.
+
+<p align=center>
+  <img src="assets/videos/video.gif" />
+</p>
