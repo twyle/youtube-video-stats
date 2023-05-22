@@ -27,45 +27,55 @@ class AddVideoUseCase(UseCase):
         return dataclasses.asdict(video)
     
 
-class GetUserUseCase(UseCase):
+class GetVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_id = data['user_id']
-            user = uow.repository.get_by_id(user_id)
-        return dataclasses.asdict(user)
+            video_id = data['video_id']
+            video = uow.repository.get_by_id(video_id)
+        return dataclasses.asdict(video)
     
-class DeleteUserUseCase(UseCase):
+class DeleteVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_id = data['user_id']
-            user = uow.repository.delete(user_id)
-        return dataclasses.asdict(user)
+            video_id = data['video_id']
+            video = uow.repository.delete(video_id)
+        return dataclasses.asdict(video)
     
 
-class UpdateUserUseCase(UseCase):
+class UpdateVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_id = data['user_id']
-            user = uow.repository.delete(user_id)
-            if data.get('first_name'):
-                user.first_name = data.get('first_name')
-            if data.get('last_name'):
-                user.last_name = data.get('last_name')
-            if data.get('email_address'):
-                user.email_address = data.get('email_address')
-            if data.get('password'):
-                user.password = data.get('password')
-            uow.repository.update(user)
-        return dataclasses.asdict(user)
+            id = int(data['id'])
+            video = uow.repository.get_by_id(id)
+            if data.get('channel_title'):
+                video.channel_title = data.get('channel_title')
+            if data.get('comments_count'):
+                video.comments_count = data.get('comments_count')
+            if data.get('likes_count'):
+                video.likes_count = data.get('likes_count')
+            if data.get('video_description'):
+                video.video_description = data.get('video_description')
+            if data.get('video_duration'):
+                video.video_duration = data.get('video_duration')
+            if data.get('video_id'):
+                video.video_id = data.get('video_id')
+            if data.get('video_thumbnail'):
+                video.video_thumbnail = data.get('video_thumbnail')
+            if data.get('video_title'):
+                video.video_title = data.get('video_title')
+            if data.get('views_count'):
+                video.views_count = data.get('views_count')
+            uow.repository.update(video)
+        return dataclasses.asdict(video)
     
     
 class GetAllUsersUseCase(UseCase):

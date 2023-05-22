@@ -3,6 +3,9 @@ from ..request_builders.request_builder import RequestBuilder
 from ..data_validators.validator_factory import ValidatorList
 from flask import Request
 from ...database.request_handler.request_handler import RequestHandler
+from ...exceptions.exceptions import (
+    VideoExistsException, VideoDoesNotExistException
+)
 
 class Controller(BaseController):                     
     def __call__(self, request_builder: RequestBuilder, data_validators: ValidatorList, 
@@ -10,8 +13,10 @@ class Controller(BaseController):
         try:
             api_request_data = self.handle_request(request_builder, data_validators, 
                                 request_object, request_handler)
-        except ValueError:
-            return {'error': 'No such user'}, 404
+        except VideoExistsException as e:
+            return {'Error': str(e)}, 409
+        except VideoDoesNotExistException as e:
+            return {'Error': str(e)}, 404
         else:
             return api_request_data, 201
         

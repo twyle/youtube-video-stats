@@ -1,4 +1,4 @@
-description: Add a Video.
+description: Update a Video.
 tags:
   - Videos
 consumes:
@@ -6,6 +6,11 @@ consumes:
 produces:
   - "application/json"
 parameters:
+  - in: query
+    description: The query should contain the video id.
+    required: true
+    name: 'id'
+    type: 'string'
   - name: body
     description: The body should contain the video id, title, channel, description, thumbnail url, durationand the count of views, comments and likes.
     in: body
@@ -51,8 +56,8 @@ parameters:
           type: "int"
           example: 391
 responses:
-  201:
-    description: WHen the video  is successfully added.
+  200:
+    description: WHen the video  is successfully updated.
 
-  409:
-    description: Fails to add video since a similar one exists.
+  404:
+    description: Fails to update video since the video does not exist.

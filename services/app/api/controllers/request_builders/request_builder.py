@@ -11,8 +11,12 @@ class RequestBuilder(RequestBuilderBase):
         
     def get_request_data(self, request_object: Request) -> dict[str, str]:
         request_data = {}
-        if request_object.method == 'POST':
-            request_data = request_object.json
+        if request_object.method in ['GET', 'DELETE']:
+            request_data = dict(request_object.args)
+        elif request_object.method in ['POST', 'PUT']:
+            request_data = request_object.json  
+            if request_object.args:
+                request_data.update(dict(request_object.args))
         return request_data
  
     def validate_request_data(self, request_data_validator: ValidatorList, 

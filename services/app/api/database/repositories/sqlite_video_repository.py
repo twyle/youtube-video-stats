@@ -2,6 +2,9 @@ from .base_repository import BaseRepository
 from typing import Any, Optional
 from ..models.video_model import Video
 from sqlite3 import IntegrityError
+from ...exceptions.exceptions import (
+    VideoExistsException, VideoDoesNotExistException
+)
 
 class SQLiteVideoRepository(BaseRepository[Video]):
     def __init__(self, connection: Optional[Any] = None) -> None:
@@ -49,7 +52,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
              video.video_duration, video.views_count, video.likes_count, video.comments_count)
             )
         except IntegrityError as e:
-            raise ValueError('The video already exists.') from e
+            raise VideoExistsException('The video already exists.') from e
         else:
             video.id = cursor.lastrowid
             return video
@@ -77,17 +80,20 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                 likes_count=row[8],
                 comments_count=row[9]
             )
-        return None
+        else:
+            raise VideoDoesNotExistException('The video was not found.')
     
     def update(self, video: Video) -> Video:
         cursor = self.connection.cursor()
         cursor.execute(
         """
-        UPDATE videos SET video_id=?, video_title=?, channel_title=?, video_description=?, video_thumbnail=?, video_duration=?, 
-            views_count=?, likes_count=?, comments_count=? WHERE id=?
+        UPDATE videos SET video_id=?, video_title=?, channel_title=?, video_description=?, 
+        video_thumbnail=?, video_duration=?, views_count=?, likes_count=?, comments_count=? 
+        WHERE id=?
         """,
-        (video.video_id, video.video_title, video.channel_title, video.video_description, video.video_thumbnail, 
-         video.video_duration, video.views_count, video.likes_count, video.comments_count)
+        (video.video_id, video.video_title, video.channel_title, video.video_description, 
+         video.video_thumbnail, video.video_duration, video.views_count, video.likes_count, 
+         video.comments_count, video.id)
         )
         return video
     

@@ -1,13 +1,13 @@
 description: Add a Video.
 tags:
-  - Videos
+  - Channels
 consumes:
   - "application/json"
 produces:
   - "application/json"
 parameters:
   - name: body
-    description: The body should contain the video id, title, channel, description, thumbnail url, durationand the count of views, comments and likes.
+    description: The body should contain the video id.
     in: body
     required: true
     schema:
@@ -51,8 +51,8 @@ parameters:
           type: "int"
           example: 391
 responses:
-  201:
-    description: WHen the video  is successfully added.
+  200:
+    description: When the confirmation email is successffuly sent
 
-  409:
-    description: Fails to add video since a similar one exists.
+  400:
+    description: Fails to update user due to bad request data
