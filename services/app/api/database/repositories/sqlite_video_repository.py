@@ -103,6 +103,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
             """DELETE FROM videos WHERE id=?""",
             (video_id,)
         )
+    
         
     def list_all(self) -> list[Video]:
         cursor = self.connection.cursor()
@@ -128,7 +129,8 @@ class SQLiteVideoRepository(BaseRepository[Video]):
             )
                 for row in rows
             ]
-        return videos if videos else []
+            return videos 
+        return []
     
     def query(self, query_string: str) -> list[Video]:
         cursor = self.connection.cursor()

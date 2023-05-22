@@ -1,4 +1,4 @@
-description: Get all the admins
+description: List Alll the Videos.
 tags:
   - Videos
 produces:
@@ -9,7 +9,7 @@ get:
   description: Get all the admins.
 responses:
   200:
-    description: When all admins are successfully obtained.
+    description: When all the videos are successfully listed..
 
   400:
-    description: Fails to list all admins due to bad request data
+    description: Fails to list all videos due to bad request data.

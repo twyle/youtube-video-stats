@@ -3,7 +3,8 @@ from ..repositories.sqlite_video_repository import SQLiteVideoRepository
 from ..repositories.base_repository import BaseRepository
 from ..usecases.use_case import UseCase
 from ..usecases.video_usecases import (
-    AddVideoUseCase, GetVideoUseCase, UpdateVideoUseCase, DeleteVideoUseCase
+    AddVideoUseCase, GetVideoUseCase, UpdateVideoUseCase, DeleteVideoUseCase, 
+    GetVideosUseCase
 )
 from ..models.video_model import Video
 
@@ -28,3 +29,7 @@ class UpdateVideoSQLiteFactory(VideoSQLiteFactory):
 class DeleteVideoSQLiteFactory(VideoSQLiteFactory):    
     def get_use_case(self) -> UseCase:
         return DeleteVideoUseCase() 
+    
+class GetVideosSQLiteFactory(VideoSQLiteFactory):    
+    def get_use_case(self) -> UseCase:
+        return GetVideosUseCase() 

@@ -44,7 +44,8 @@ class DeleteVideoUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             video_id = data['video_id']
-            video = uow.repository.delete(video_id)
+            video = uow.repository.get_by_id(video_id)
+            uow.repository.delete(video_id)
         return dataclasses.asdict(video)
     
 
@@ -78,11 +79,11 @@ class UpdateVideoUseCase(UseCase):
         return dataclasses.asdict(video)
     
     
-class GetAllUsersUseCase(UseCase):
+class GetVideosUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            users = uow.repository.list_all()
-        return jsonify(users)
+            videos = uow.repository.list_all()
+        return jsonify(videos)
