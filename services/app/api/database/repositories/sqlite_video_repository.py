@@ -142,21 +142,5 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         cursor.execute(query_string)
         rows = cursor.fetchall()
         if rows:
-            videos = [
-                Video(
-                    id=row[0],
-                    video_id=row[1],
-                    video_title=row[2],
-                    channel_title=row[3],
-                    video_description=row[4],
-                    video_thumbnail=row[5],
-                    video_duration=row[6],
-                    views_count=row[7],
-                    likes_count=row[8],
-                    comments_count=row[9],
-                    date_published=row[10]
-            )
-                for row in rows
-            ]
-            return videos
+            return rows
         return []

@@ -135,5 +135,5 @@ class QueryVideoUseCase(QueryMixin, UseCase):
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            videos = uow.repository.query(self.generate_query())
+            videos = uow.repository.query(self.generate_query(data))
         return jsonify(videos)

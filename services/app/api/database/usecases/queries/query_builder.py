@@ -3,29 +3,20 @@ from typing import Optional, Any
 from .filter import Filter
 
 class QueryBuilderBase(ABC):
-    def __init__(self, query: str, query_filters: Optional[list[Filter]] = []) -> None:
-        self.__query = query
+    def __init__(self, query_filters: Optional[list[Filter]] = []) -> None:
         self.__query_filters = query_filters
-        
-    @property
-    def query(self) -> str:
-        return self.__query
-    
-    @query.setter
-    def query(self, query: str) -> None:
-        self.__query = query
         
     @abstractmethod    
     def add_filter(self, query_filter: Filter) -> None:
         pass
     
     @abstractmethod
-    def __call__(self, query_parameters: dict[str, dict[str, Any]]) -> str:
+    def __call__(self, query: str, query_parameters: dict[str, dict[str, Any]]) -> str:
         pass
     
 class QueryBuilder(QueryBuilderBase):
-    def __init__(self, query: str, query_filters: Optional[list[Filter]] = []) -> None:
-        super().__init__(query, query_filters)
+    def __init__(self, query_filters: Optional[list[Filter]] = []) -> None:
+        super().__init__(query_filters)
         self.__first_filter = None
         if query_filters:
             for query_filter in query_filters:
@@ -41,7 +32,7 @@ class QueryBuilder(QueryBuilderBase):
                 current_filter = next_filter
             current_filter.next_filter = query_filter
     
-    def __call__(self, query_parameters: dict[str, dict[str, Any]]) -> str:
+    def __call__(self, query: str, query_parameters: dict[str, dict[str, Any]]) -> str:
         if self.__first_filter:
-            return self.__first_filter(self.query, query_parameters)
+            return self.__first_filter(query, query_parameters)
         return self.query, query_parameters

@@ -1,19 +1,36 @@
-from database.builder.user_builder import  get_user, update_user
-from database.connections import create_sqlite_database_connection
-from database.builder.user_builder import CreateUserRequestHandler
-from database.models.user_model import User
+from database.usecases.queries.limiter import LimitLimiter, OffsetLimiter, FieldLimiter, SortLimiter
+from database.usecases.queries.query_limiters import QueryLimiters
 
+limiters = [
+    SortLimiter(), LimitLimiter(), OffsetLimiter(), FieldLimiter()
+]
 
-request_handler = CreateUserRequestHandler(create_sqlite_database_connection)
-new_user = User(
-    first_name='lyle',
-    last_name='okoth',
-    email_address='lyle@gmail.com',
-    password='password'
-)
+query = "SELECT * FROM videos"
 
+data = {
+  "fields": [
+    "video_id",
+    "video_title",
+    "channel_title"
+  ],
+  "limit": 20,
+  "offset": 20,
+  "query": {
+    "comments_count": {
+      "gt": 500
+    }
+  },
+  "sort": {
+    "fileds": [
+      "comments_count",
+      "likes_count"
+    ],
+    "order": "asc"
+  }
+}
+
+ql = QueryLimiters(limiters)
 
 if __name__ == '__main__':
-    request_handler(new_user)
-    # update_user()
-    # get_user()
+    r = ql(query, data)
+    print(r[0])

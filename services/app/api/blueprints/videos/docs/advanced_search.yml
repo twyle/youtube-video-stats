@@ -13,26 +13,33 @@ parameters:
     schema:
       type: object
       required:
-        - "likes_count"
-        - "views_count"
-        - "comments_count"
+        - "query"
       properties:
-        likes_count:
-          type: "object"
-          example: {"gt": 200}
-        views_count:
-          type: "object"
-          example: {"lte": 500}
-        comments_count:
+        query:
           type: "object"
           example: {
-            "lte": 300,
-            "gte": 50
+            "comments_count": {
+              "gt": 500
+            },
+            "likes_count": {
+              "gte": 600
+            }
           }
+        limit:
+          type: "int"
+          example: 10
+        offset:
+          type: "int"
+          example: 10
+        fields:
+          type: "array"
+          items:
+            type: "string"
+          example: ["video_id", "video_title"]
         sort:
           type: "object"
           example: {
-            "fileds": ["comments_count", "likes_count"],
+            "field": "comments_count",
             "order": "asc"
           }
 responses:
