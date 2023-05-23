@@ -60,7 +60,7 @@ class SortLimiter(Limiter):
     def __call__(self, query: str, query_parameters: dict[str, dict[str, Any]]) -> tuple[str, dict[str, dict[str, Any]]]:
         field = 'id'
         order = 'ASC'
-        if query_parameters.get('sor'):
+        if query_parameters.get('sort'):
             field = query_parameters['sort']['field']
             order = query_parameters['sort']['order']
         updated_query = query + f" ORDER BY {field} {order}"

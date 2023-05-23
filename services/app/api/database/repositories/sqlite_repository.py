@@ -2,6 +2,7 @@ from .base_repository import BaseRepository
 from typing import Any, Optional
 from ..models.user_model import User
 from sqlite3 import IntegrityError
+from ...exceptions.exceptions import UserExistsException, UserDoesNotExistException
 
 class SQLiteUserRepository(BaseRepository[User]):
     def __init__(self, connection: Optional[Any] = None) -> None:
@@ -43,7 +44,7 @@ class SQLiteUserRepository(BaseRepository[User]):
             (user.first_name, user.last_name, user.email_address, user.password, user.date_registered)
             )
         except IntegrityError as e:
-            raise ValueError('The user already exists.') from e
+            raise UserExistsException('The user already exists.') from e
         else:
             user.id = cursor.lastrowid
             return user
@@ -65,7 +66,7 @@ class SQLiteUserRepository(BaseRepository[User]):
                 email_address=row[3],
                 password=row[4]
             )
-        return None
+        raise UserDoesNotExistException('The given user does not exist.')
     
     def update(self, user: User) -> User:
         cursor = self.connection.cursor()

@@ -10,23 +10,6 @@ from .queries.limiter import (
 )
 from .queries.query_limiters import QueryLimiters
 
-qr = {
-    "query": {
-        "comments_count": {
-            "gt": 500
-        },
-        "id": {
-            "not in": [10, 13, 14, 16]
-        },
-        "views_count": {
-            "gt": 500
-        }
-    },
-    "limit": 100,
-    "offset": 10,
-    "fields": ["video_title", "video_id", "channel_id"]
-}
-
 class QueryMixin:       
     @staticmethod    
     def generate_query(data: dict[str, dict[str, Any]]):

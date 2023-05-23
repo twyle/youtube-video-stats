@@ -33,60 +33,21 @@ def post_data():
         print(resp.json())
     else:
         print(resp.json())
-        
-q = {
-    "query": {
-        "likes_count": {
-            "gte": 500,
-            "lte": 1000
-        }
-    },
-    "limit": 10,
-    "offset": 10,
-    "sort": {
-        "field": "id",
-        "order": 'ASC'
+ 
+def register_user():
+    url = 'http://localhost:5000/api/v1/auth/register'
+    user_details = {
+        'first_name': 'lyle',
+        'last_name': 'okoth',
+        'email_address': 'lyle@gmail.com',
+        'password': 'password',
+        'confirm_password': 'password'
     }
-}
-    
-data = {
-    "likes_count": {
-        "gt": 12,
-        "lt": 20
-    },
-    "comments_count": {
-        "eq": 100
-    },
-    "views_count": {
-        "lte": 100,
-        "gte": 5
-    }
-}        
-def generate_query(data: dict[str, dict[str, Any]]):
-    operator_map = {
-        'gt': '>',
-        'gte': '>=',
-        'lt': '<',
-        "eq": "=",
-        "lte": "<="
-    }
-    q = ""
-    query = data["query"]
-    for field, query_parameters in query.items():
-        operators_values = list(query_parameters.items())
-        for operator, value in operators_values:
-            if not q:
-                q = f'SELECT * FROM videos WHERE {field} {operator_map[operator]} {value}'
-            else: 
-                q = q + f" AND {field} {operator_map[operator]} {value}"
-    if 'sort' in data.keys():
-        q = q + f" ORDER BY {data['sort']['field']} {data['sort']['order']}"
-    if 'limit' in data.keys():
-        q = q + f" LIMIT {data['limit']}"
-    if 'offset' in data.keys():
-        q = q + f" OFFSET {data['offset']}"
-    print(q)
-    
+    resp = requests.post(url, json=user_details)
+    if resp.ok:
+        print(resp.json())
+    else:
+        print(resp.json())
 
 if __name__ == '__main__':
-    generate_query(q)
+    register_user()        

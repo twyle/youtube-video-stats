@@ -1,14 +1,30 @@
 from flask import Blueprint, request
 from flasgger import swag_from
 from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.controllers.user_controller_factory import CreateUserControllerFactory
-
+from ...controllers.controllers.user_controller_factory import (
+    CreateUserControllerFactory, DeleteUserControllerFactory
+)
 auth = Blueprint('auth', __name__)
 
 @swag_from('./docs/register.yml', endpoint='auth.register_client', methods=['POST'])
 @auth.route('/register', methods=['POST'])
 def register_client():
     controller = CreateUserControllerFactory()
+    create_user_builder = ResponseBuilder()
+    api_response = (
+        create_user_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
+
+@swag_from('./docs/delete.yml', endpoint='auth.delete_client', methods=['DELETE'])
+@auth.route('/', methods=['DELETE'])
+def delete_client():
+    controller = DeleteUserControllerFactory()
     create_user_builder = ResponseBuilder()
     api_response = (
         create_user_builder.with_data_validators(controller.get_request_data_validator())

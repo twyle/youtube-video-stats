@@ -6,6 +6,6 @@ from flask import Flask
 
 def register_blueprints(app: Flask) -> None:
     """Register the application blueprints."""
-    app.register_blueprint(videos, url_prefix='/videos')
-    app.register_blueprint(auth, url_prefix='/auth')
-    app.register_blueprint(channels, url_prefix='/channels')
+    app.register_blueprint(videos, url_prefix='/api/v1/videos')
+    app.register_blueprint(auth, url_prefix='/api/v1/auth')
+    app.register_blueprint(channels, url_prefix='/api/v1/channels')

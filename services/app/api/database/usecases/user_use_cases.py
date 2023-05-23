@@ -38,7 +38,8 @@ class DeleteUserUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             user_id = data['user_id']
-            user = uow.repository.delete(user_id)
+            user = uow.repository.get_by_id(user_id) 
+            uow.repository.delete(user_id)
         return dataclasses.asdict(user)
     
 

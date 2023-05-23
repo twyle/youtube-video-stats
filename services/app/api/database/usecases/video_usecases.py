@@ -135,5 +135,12 @@ class QueryVideoUseCase(QueryMixin, UseCase):
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            videos = uow.repository.query(self.generate_query(data))
+            videos = []
+            video_data_list = uow.repository.query(self.generate_query(data))
+            if video_data_list:
+                for video_data in video_data_list:
+                    d = {}
+                    for i, item in enumerate(video_data):
+                        d[data['fields'][i]] = item
+                    videos.append(d)
         return jsonify(videos)

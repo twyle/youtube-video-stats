@@ -5,7 +5,9 @@ from ..data_validators.data_validators import (
 )
 from ...database.request_handler.request_handler_base import RequestHandlerBase
 from ...database.request_handler.request_handler import RequestHandler
-from ...database.request_handler.user_factories import AddUserSQLiteFactory, ListUsersSQLiteFactory
+from ...database.request_handler.user_factories import (
+    AddUserSQLiteFactory, ListUsersSQLiteFactory, DeleteUserSQLiteFactory
+)
 
 class CreateUserControllerFactory(BaseControllerFactory):
     def get_request_data_validator(self) -> DataValidatorList:
@@ -20,6 +22,15 @@ class CreateUserControllerFactory(BaseControllerFactory):
     
     def get_request_handler(self) -> RequestHandlerBase:
         request_handler_factory = AddUserSQLiteFactory()
+        return RequestHandler(request_handler_factory)
+    
+class DeleteUserControllerFactory(BaseControllerFactory):
+    def get_request_data_validator(self) -> DataValidatorList:
+        validators = []
+        return DataValidatorList(validators)
+    
+    def get_request_handler(self) -> RequestHandlerBase:
+        request_handler_factory = DeleteUserSQLiteFactory()
         return RequestHandler(request_handler_factory)
     
 class ListUsersControllerFactory(BaseControllerFactory):
