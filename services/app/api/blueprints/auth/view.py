@@ -2,7 +2,8 @@ from flask import Blueprint, request
 from flasgger import swag_from
 from ...controllers.response_builders.create_response import ResponseBuilder
 from ...controllers.controllers.user_controller_factory import (
-    CreateUserControllerFactory, DeleteUserControllerFactory
+    CreateUserControllerFactory, DeleteUserControllerFactory, ListUsersControllerFactory,
+    ActivateAccountControllerFactory
 )
 auth = Blueprint('auth', __name__)
 
@@ -22,7 +23,7 @@ def register_client():
     return api_response
 
 @swag_from('./docs/delete.yml', endpoint='auth.delete_client', methods=['DELETE'])
-@auth.route('/', methods=['DELETE'])
+@auth.route('/delete', methods=['DELETE'])
 def delete_client():
     controller = DeleteUserControllerFactory()
     create_user_builder = ResponseBuilder()
@@ -37,11 +38,36 @@ def delete_client():
     return api_response
 
 
-@swag_from('./docs/confirm_email.yml', endpoint='auth.confirm_client_email', methods=['GET'])
-@auth.route('/confirm_email', methods=['GET'])
-def confirm_client_email():
-    """Confirm email address."""
-    return 'Email confirmed.'
+@swag_from('./docs/users.yml', endpoint='auth.list_all', methods=['GET'])
+@auth.route('/users', methods=['GET'])
+def list_all():
+    controller = ListUsersControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
+
+@swag_from('./docs/activate.yml', endpoint='auth.activate_account', methods=['GET'])
+@auth.route('/activate', methods=['GET'])
+def activate_account():
+    """Activate User account."""
+    controller = ActivateAccountControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
 
 
 @swag_from('./docs/login.yml', endpoint='auth.login_client', methods=['POST'])

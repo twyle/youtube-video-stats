@@ -28,7 +28,8 @@ class SQLiteUserRepository(BaseRepository[User]):
             email_address TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             date_registered TEXT NOT NULL,
-            date_updated TEXT
+            date_updated TEXT,
+            account_activated INTEGER
         )
         """
         )
@@ -39,9 +40,11 @@ class SQLiteUserRepository(BaseRepository[User]):
         try:
             cursor.execute(
             """
-            INSERT INTO users (first_name, last_name, email_address, password, date_registered) VALUES (?, ?, ?, ?, ?)
+            INSERT INTO users (first_name, last_name, email_address, password, date_registered, 
+            date_updated, account_activated) VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
-            (user.first_name, user.last_name, user.email_address, user.password, user.date_registered)
+            (user.first_name, user.last_name, user.email_address, user.password, 
+             user.date_registered, user.date_updated, user.account_activated)
             )
         except IntegrityError as e:
             raise UserExistsException('The user already exists.') from e
@@ -53,7 +56,8 @@ class SQLiteUserRepository(BaseRepository[User]):
         cursor = self.connection.cursor()
         cursor.execute(
         """
-        SELECT id, first_name, last_name, email_address, password FROM users WHERE id=?
+        SELECT id, first_name, last_name, email_address, password, date_registered, date_updated, 
+        account_activated FROM users WHERE id=?
         """,
         ((user_id,))
         )
@@ -64,7 +68,10 @@ class SQLiteUserRepository(BaseRepository[User]):
                 first_name=row[1],
                 last_name=row[2],
                 email_address=row[3],
-                password=row[4]
+                password=row[4],
+                date_registered=row[5],
+                date_updated=row[6],
+                account_activated=row[7]
             )
         raise UserDoesNotExistException('The given user does not exist.')
     
@@ -72,9 +79,11 @@ class SQLiteUserRepository(BaseRepository[User]):
         cursor = self.connection.cursor()
         cursor.execute(
         """
-        UPDATE users SET first_name=?, last_name=?, email_address=?, password=? WHERE id=?
+        UPDATE users SET first_name=?, last_name=?, email_address=?, password=?, account_activated=?
+        WHERE id=?
         """,
-        (user.first_name, user.last_name, user.email_address, user.password, user.id)
+        (user.first_name, user.last_name, user.email_address, user.password, user.account_activated, 
+         user.id)
         )
         return user
     
@@ -100,11 +109,15 @@ class SQLiteUserRepository(BaseRepository[User]):
                     first_name=row[1],
                     last_name=row[2],
                     email_address=row[3],
-                    password=row[4]
+                    password=row[4],
+                    date_registered=row[5],
+                    date_updated=row[6],
+                    account_activated=row[7]
                 )
                 for row in rows
             ]
-        return users if users else []
+            return users
+        return []
     
     def query(self, query_string: str) -> list[User]:
         cursor = self.connection.cursor()
@@ -117,7 +130,10 @@ class SQLiteUserRepository(BaseRepository[User]):
                     first_name=row[1],
                     last_name=row[2],
                     email_address=row[3],
-                    password=row[4]
+                    password=row[4],
+                    date_registered=row[5],
+                    date_updated=row[6],
+                    account_activated=row[7]
                 )
                 for row in rows
             ]

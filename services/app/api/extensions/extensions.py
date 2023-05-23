@@ -1,5 +1,10 @@
 from flasgger import LazyString, Swagger
 from flask import request
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
+
+bcrypt = Bcrypt()
+jwt = JWTManager()
 
 swagger_template = {
     "swagger": "2.0",

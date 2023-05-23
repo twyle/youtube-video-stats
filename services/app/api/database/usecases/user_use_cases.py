@@ -3,7 +3,8 @@ from ..models.user_model import User
 from typing import Optional, Any
 import dataclasses
 from .use_case import UseCase
-from flask import jsonify
+from flask import jsonify, current_app
+from jwt import ExpiredSignatureError, InvalidTokenError
 
 class CreateUserUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -15,10 +16,15 @@ class CreateUserUseCase(UseCase):
                 first_name=data['first_name'],
                 last_name=data['last_name'],
                 email_address=data['email_address'],
-                password=data['password']
+                password=User.hash_password(data['password'])
             )
             uow.repository.add(user)
-        return dataclasses.asdict(user)
+        activation_token = User.encode_auth_token(user.id)
+        data = {
+            'user': dataclasses.asdict(user),
+            'activation_token': activation_token
+        }
+        return data
     
 
 class GetUserUseCase(UseCase):
@@ -71,3 +77,27 @@ class GetAllUsersUseCase(UseCase):
         with self.unit_of_work as uow:
             users = uow.repository.list_all()
         return jsonify(users)
+    
+class ActivateUserUseCase(UseCase):
+    def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
+        super().__init__(unit_of_work)
+        
+    def execute(self, data: dict[str, Any]) -> dict[str, Any]:
+        exct = None
+        with self.unit_of_work as uow:
+            user_id = data['user_id']
+            user = uow.repository.get_by_id(user_id)
+            try:
+                user_identity = User.decode_auth_token(data['activation_token'])
+            except (ExpiredSignatureError, InvalidTokenError) as e:
+                uow.repository.delete(user_id)
+                exct = e
+            else:
+                if not int(user_id) == int(user_identity):
+                    raise InvalidTokenError()
+                user.account_activated = 1
+                uow.repository.update(user)
+        if exct:
+            raise exct
+        return {'Success': 'Account Activated',
+                'data': dataclasses.asdict(user)}

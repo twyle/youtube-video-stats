@@ -1,40 +1,32 @@
-description: Admin Registration
+description: Log in to a registered account.
 tags:
   - Authentication
 produces:
   - "application/json"
 parameters:
-  - name: "First Name"
-    description: "The First name"
+  - name: body
+    description: The body should contain the email address and the password.
+    in: body
     required: true
-    in: "formData"
-  - name: "Last Name"
-    description: "The Last name"
-    required: true
-    in: "formData"
-    type: string
-  - name: "Email Address"
-    description: "The Admin email"
-    required: true
-    in: "formData"
-    type: string
-  - name: "Password"
-    description: "The Admin password"
-    required: false
-    in: "formData"
-    type: password
-  - name: "Profile Picture"
-    description: "Admin's profile picture"
-    required: false
-    in: "formData"
-    type: file
+    schema:
+      type: object
+      required:
+        - "email_address"
+        - "password"
+      properties:
+        email_address:
+          type: "email"
+          example: "lyle@gmail.com"
+        password:
+          type: "string"
+          example: "password"
 
 responses:
   201:
-    description: When a user succesfully registers.
+    description: When you succesfully register.
 
   400:
-    description: Fails to Register admin due to bad request data
+    description: When your registration fails due to providing bad data.
 
   409:
-    description: Fails to Register author since author with given details exists.
+    description: Fails to register when you give the email address of an existing user.

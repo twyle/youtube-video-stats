@@ -1,0 +1,4 @@
+Collecting pyjwt
+  Using cached PyJWT-2.7.0-py3-none-any.whl (22 kB)
+Installing collected packages: pyjwt
+Successfully installed pyjwt-2.7.0

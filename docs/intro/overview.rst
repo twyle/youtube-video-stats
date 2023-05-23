@@ -165,3 +165,27 @@ Here is a sample output:
         'authorization_token': 'authorization token', 
         'refresh_token': 'refresh token'
     }
+
+Loading Video details
+=====================
+To get the latest 10 uploaded videos to the Test channel, send a 
+``get request`` to the ``/api/v1/auth/channels/channel`` with the channel id.
+
+To get the channel id's send a ``get request`` to the ``/api/v1/auth/channels/channel``
+route. This gives you back channel details.
+
+To get the 10 latest videos in Python:
+
+.. code-block:: python
+
+    import requests
+
+    def load_latest_videos():
+        channel_id = 1
+        url = 'http://localhost:5000/api/v1/channels/channel'}
+        resp = requests.get(url, params={'channel_id': 1})
+        if resp.ok:
+            print(resp.json)
+
+    if __name__ == '__main__':
+        load_latest_videos()

@@ -6,6 +6,7 @@ from ...database.request_handler.request_handler import RequestHandler
 from ...exceptions.exceptions import (
     VideoExistsException, VideoDoesNotExistException, UserExistsException, UserDoesNotExistException
 )
+from jwt import ExpiredSignatureError, InvalidTokenError
 
 class Controller(BaseController):                     
     def __call__(self, request_builder: RequestBuilder, data_validators: ValidatorList, 
@@ -17,6 +18,10 @@ class Controller(BaseController):
             return {'Error': str(e)}, 409
         except (VideoDoesNotExistException, UserDoesNotExistException) as e:
             return {'Error': str(e)}, 404
+        except ExpiredSignatureError:
+            return {'Error': 'The activation token has expired. Create a new account.'}
+        except InvalidTokenError:
+            return {'Error': 'The activation token is invalid. Create a new account.'}
         else:
             return api_request_data, 201
         
