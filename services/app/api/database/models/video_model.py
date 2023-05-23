@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+import datetime as dt
 
 @dataclass
 class Video:
@@ -11,6 +12,7 @@ class Video:
     video_duration: str
     views_count: int
     likes_count: int
+    date_published: dt.date
     comments_count: int
     id: Optional[int] = None
     

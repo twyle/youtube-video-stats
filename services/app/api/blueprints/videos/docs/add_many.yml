@@ -29,7 +29,8 @@ parameters:
               'video_duration': '8T',
               'views_count': 123465,
               'likes_count': 234,
-              'comments_count': 543
+              'comments_count': 543,
+              'date_published': '2023-05-21'
             }
           ]
 responses:

@@ -22,6 +22,7 @@ parameters:
         - "views_count"
         - "likes_count"
         - "comments_count"
+        - "date_published"
       properties:
         video_id:
           type: "string"
@@ -50,6 +51,9 @@ parameters:
         comments_count:
           type: "int"
           example: 391
+        date_published:
+          type: "string"
+          example: "2023-05-21"
 responses:
   201:
     description: WHen the video  is successfully added.

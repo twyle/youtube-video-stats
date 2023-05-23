@@ -16,7 +16,7 @@ parameters:
     required: false
     name: 'sort_field'
     type: 'string'
-    enum: ['video_title', 'channel_title', 'video_duration', 'views_count', 'likes_count', 'comments_count', 'id']
+    enum: ['video_title', 'channel_title', 'date_published', 'video_duration', 'views_count', 'likes_count', 'comments_count', 'id']
   - in: query
     description: The query should contain the sorting order.
     required: false
@@ -34,6 +34,11 @@ parameters:
     required: false
     name: 'offset'
     type: 'int'
+  - in: query
+    description: The query should contain the number of videos to skip.
+    required: false
+    name: 'date_published'
+    type: 'string'
 responses:
   200:
     description: When all the videos are successfully listed..

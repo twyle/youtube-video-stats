@@ -1,11 +1,10 @@
 from ..repositories.unit_of_work import BaseUnitfWork
-from ..models.user_model import User
 from typing import Optional, Any
 import dataclasses
 from .use_case import UseCase
 from flask import jsonify
 from ..models.video_model import Video
-from .queries import QueryMixin
+from .querie_mixin import QueryMixin
 
 class AddVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -22,7 +21,8 @@ class AddVideoUseCase(UseCase):
                 video_duration=data['video_duration'],
                 views_count=data['views_count'],
                 likes_count=data['likes_count'],
-                comments_count=data['comments_count']
+                comments_count=data['comments_count'],
+                date_published=data['date_published']
             )
             uow.repository.add(video)
         return dataclasses.asdict(video)
@@ -76,6 +76,8 @@ class UpdateVideoUseCase(UseCase):
                 video.video_title = data.get('video_title')
             if data.get('views_count'):
                 video.views_count = data.get('views_count')
+            if data.get('date_published'):
+                video.date_published = data.get('date_published')
             uow.repository.update(video)
         return dataclasses.asdict(video)
     
@@ -120,7 +122,8 @@ class AddManyVideoUseCase(UseCase):
                     video_duration=video_data['video_duration'],
                     views_count=video_data['views_count'],
                     likes_count=video_data['likes_count'],
-                    comments_count=video_data['comments_count']
+                    comments_count=video_data['comments_count'],
+                    date_published=video_data['date_published']
                 )
                 uow.repository.add(video)
         return {'Videos Added': f'{len(video_data_list)}'}
@@ -132,7 +135,5 @@ class QueryVideoUseCase(QueryMixin, UseCase):
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            print(data)
-            self.print_yay()
-        # return dataclasses.asdict(video)
-        return {'Success': 'Queried database.'}
+            videos = uow.repository.query(self.generate_query())
+        return jsonify(videos)

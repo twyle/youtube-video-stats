@@ -33,7 +33,8 @@ class SQLiteVideoRepository(BaseRepository[Video]):
             video_duration TEXT,
             views_count INTEGER ,
             likes_count INTEGER,
-            comments_count INTEGER
+            comments_count INTEGER,
+            date_published TEXT
         )
         """
         )
@@ -45,11 +46,12 @@ class SQLiteVideoRepository(BaseRepository[Video]):
             cursor.execute(
             """
             INSERT INTO videos (video_id, video_title, channel_title, video_description, video_thumbnail, video_duration, 
-            views_count, likes_count, comments_count) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            views_count, likes_count, comments_count, date_published) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (video.video_id, video.video_title, video.channel_title, video.video_description, video.video_thumbnail, 
-             video.video_duration, video.views_count, video.likes_count, video.comments_count)
+             video.video_duration, video.views_count, video.likes_count, video.comments_count, 
+             video.date_published)
             )
         except IntegrityError as e:
             raise VideoExistsException('The video already exists.') from e
@@ -62,7 +64,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         cursor.execute(
         """
         SELECT id, video_id, video_title, channel_title, video_description, video_thumbnail, video_duration, 
-            views_count, likes_count, comments_count FROM videos WHERE id=?
+            views_count, likes_count, comments_count, date_published FROM videos WHERE id=?
         """,
         ((video_id,))
         )
@@ -78,7 +80,8 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                 video_duration=row[6],
                 views_count=row[7],
                 likes_count=row[8],
-                comments_count=row[9]
+                comments_count=row[9],
+                date_published=row[10]
             )
         else:
             raise VideoDoesNotExistException('The video was not found.')
@@ -88,12 +91,12 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         cursor.execute(
         """
         UPDATE videos SET video_id=?, video_title=?, channel_title=?, video_description=?, 
-        video_thumbnail=?, video_duration=?, views_count=?, likes_count=?, comments_count=? 
-        WHERE id=?
+        video_thumbnail=?, video_duration=?, views_count=?, likes_count=?, comments_count=?,
+        date_published=? WHERE id=?
         """,
         (video.video_id, video.video_title, video.channel_title, video.video_description, 
          video.video_thumbnail, video.video_duration, video.views_count, video.likes_count, 
-         video.comments_count, video.id)
+         video.comments_count, video.date_published, video.id)
         )
         return video
     
@@ -126,7 +129,8 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                     video_duration=row[6],
                     views_count=row[7],
                     likes_count=row[8],
-                    comments_count=row[9]
+                    comments_count=row[9],
+                    date_published=row[10]
             )
                 for row in rows
             ]
@@ -149,8 +153,10 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                     video_duration=row[6],
                     views_count=row[7],
                     likes_count=row[8],
-                    comments_count=row[9]
+                    comments_count=row[9],
+                    date_published=row[10]
             )
                 for row in rows
             ]
-        return videos if videos else []
+            return videos
+        return []
