@@ -5,6 +5,7 @@ import dataclasses
 from .use_case import UseCase
 from flask import jsonify, current_app
 from jwt import ExpiredSignatureError, InvalidTokenError
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 class CreateUserUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -101,3 +102,22 @@ class ActivateUserUseCase(UseCase):
             raise exct
         return {'Success': 'Account Activated',
                 'data': dataclasses.asdict(user)}
+        
+class LoginUserUseCase(UseCase):
+    def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
+        super().__init__(unit_of_work)
+        
+    def execute(self, data: dict[str, Any]) -> dict[str, Any]:
+        with self.unit_of_work as uow:
+            user_email = data['email_address']
+            user = uow.repository.get_by_email(user_email)
+            if not user.account_activated:
+                raise ValueError('The user account has not been activated.')
+            if not user.check_password(data['password']):
+                raise ValueError('Invalid email address or password.')
+        access_token = create_access_token(identity=user.id)
+        refresh_token = create_refresh_token(identity=user.id)
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }

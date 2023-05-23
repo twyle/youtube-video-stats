@@ -22,6 +22,8 @@ class Controller(BaseController):
             return {'Error': 'The activation token has expired. Create a new account.'}
         except InvalidTokenError:
             return {'Error': 'The activation token is invalid. Create a new account.'}
+        except ValueError as e:
+            return {'Error': str(e)}, 404
         else:
             return api_request_data, 201
         

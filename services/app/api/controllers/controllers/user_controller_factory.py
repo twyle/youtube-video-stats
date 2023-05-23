@@ -7,7 +7,7 @@ from ...database.request_handler.request_handler_base import RequestHandlerBase
 from ...database.request_handler.request_handler import RequestHandler
 from ...database.request_handler.user_factories import (
     AddUserSQLiteFactory, ListUsersSQLiteFactory, DeleteUserSQLiteFactory, 
-    ActivateAccountSQLiteFactory
+    ActivateAccountSQLiteFactory, LoginUserSQLiteFactory
 )
 
 class CreateUserControllerFactory(BaseControllerFactory):
@@ -50,4 +50,14 @@ class ActivateAccountControllerFactory(BaseControllerFactory):
     
     def get_request_handler(self) -> RequestHandlerBase:
         request_handler_factory = ActivateAccountSQLiteFactory()
+        return RequestHandler(request_handler_factory)
+    
+
+class LoginUserControllerFactory(BaseControllerFactory):
+    def get_request_data_validator(self) -> DataValidatorList:
+        validators = []
+        return DataValidatorList(validators)
+    
+    def get_request_handler(self) -> RequestHandlerBase:
+        request_handler_factory = LoginUserSQLiteFactory()
         return RequestHandler(request_handler_factory)

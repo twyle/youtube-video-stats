@@ -75,6 +75,29 @@ class SQLiteUserRepository(BaseRepository[User]):
             )
         raise UserDoesNotExistException('The given user does not exist.')
     
+    def get_by_email(self, user_email: str) -> User:
+        cursor = self.connection.cursor()
+        cursor.execute(
+        """
+        SELECT id, first_name, last_name, email_address, password, date_registered, date_updated, 
+        account_activated FROM users WHERE email_address=?
+        """,
+        ((user_email,))
+        )
+        row = cursor.fetchone()
+        if row:
+            return User(
+                id=row[0],
+                first_name=row[1],
+                last_name=row[2],
+                email_address=row[3],
+                password=row[4],
+                date_registered=row[5],
+                date_updated=row[6],
+                account_activated=row[7]
+            )
+        raise UserDoesNotExistException('The given user does not exist.')
+    
     def update(self, user: User) -> User:
         cursor = self.connection.cursor()
         cursor.execute(
