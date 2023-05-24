@@ -65,26 +65,30 @@ and run it using the :command:`python` command::
     python register_user.py
 
 
-This will print a list of videos that deal with programming with Python. The
-output looks like this:
+This will print out the user details as well as an account activation token:
 
-.. code-block:: python
+.. code-block:: 
+    
     {
-        'date_registered': 'Tue, 23 May 2023 16:25:51 GMT', 
-        'date_updated': 'Tue, 23 May 2023 16:25:51 GMT', 
-        'email_address': 'lyle@gmail.com', 
-        'first_name': 'lyle', 
-        'id': 2, 
-        'last_name': 'okoth', 
-        'password': 'password',
-        'activation_token': 'activation token'
+        'activation_token': 'eyJhbGciOiJIUzI1NiIsITHhaBKjbqHvLpSoYDa0', 
+        'user': 
+            {
+                'account_activated': 0, 
+                'date_registered': 'Wed, 24 May 2023 00:00:00 GMT', 
+                'date_updated': 'Wed, 24 May 2023 00:00:00 GMT', 
+                'email_address': 'lyle@gmail.com', 
+                'first_name': 'lyle', 
+                'id': 1, 
+                'last_name': 'okoth', 
+                'password': '$2b$12$/AnSOsQo2J08Ye1wFOybaenr5bdC2CpWXPkCWQdfBYI11C'
+            }
     }
 
 Account Activation
 ==================
 
 To activate your account, make a ``post request`` to the account activation route
-``/api/v1/auth/register`` with your email address and the token returned when you 
+``/api/v1/auth/activate`` with your user id and the token returned when you 
 created your account.
 
 Here is an example using python:
@@ -95,13 +99,13 @@ Here is an example using python:
 
     def activate_account():
         url = 'http://localhost:5000/api/v1/auth/activate'
-        activation_details = {
-            'email_address': 'lyle@gmail.com',
-            'token': 'token'
-        }
-        resp = requests.post(url, json=activation_details)
+        user_id = 1
+        activation_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleoYDa0'
+        resp = requests.get(url, params={'user_id': user_id, 'activation_token': activation_token})
         if resp.ok:
-            print(resp.json)
+            print(resp.json())
+        else:
+            print(resp.json())
 
     if __name__ == '__main__':
         activate_account()
@@ -114,11 +118,20 @@ and run it using the :command:`python` command::
 The output will include your registration details as shown:
 
 .. code-block:: python
-    { 
-        'email_address': 'lyle@gmail.com', 
-        'first_name': 'lyle', 
-        'id': 2, 
-        'last_name': 'okoth'
+
+    {
+        'Success': 'Account Activated', 
+        'data': 
+            {
+                'account_activated': 1, 
+                'date_registered': '2023-05-24', 
+                'date_updated': '2023-05-24', 
+                'email_address': 'lyle@gmail.com', 
+                'first_name': 'lyle', 
+                'id': 1, 
+                'last_name': 'okoth', 
+                'password': '$2b$12$/AnSOsQo2J08Ye1wFOybaeC0Cos3Inr5bdC2CpWXPkCWQdfBYI11C'
+            }
     }
 
 Log into Activated Account
@@ -126,7 +139,7 @@ Log into Activated Account
 
 To use the API, you will need an API key, that will be used to authenticate 
 your identity. To get an API key, log into your aactivated account. This 
-involves sending a ``post request`` request to the ``/api/v1/auth/register`` 
+involves sending a ``post request`` request to the ``/api/v1/auth/login`` 
 route with your email and password.
 
 Here is an example in Python:
@@ -135,7 +148,7 @@ Here is an example in Python:
 
     import requests
 
-    def log_into_account():
+    def login_user():
         url = 'http://localhost:5000/api/v1/auth/login'
         login_details = {
             'email_address': 'lyle@gmail.com',
@@ -143,10 +156,12 @@ Here is an example in Python:
         }
         resp = requests.post(url, json=login_details)
         if resp.ok:
-            print(resp.json)
+            print(resp.json())
+        else:
+            print(resp.json())
 
     if __name__ == '__main__':
-        log_into_account()
+        login_user()
 
 Put this in a text file, name it to something like ``log_into_account.py``
 and run it using the :command:`python` command::
@@ -161,9 +176,10 @@ generate a new authentication token.
 Here is a sample output:
 
 .. code-block:: python
-    { 
-        'authorization_token': 'authorization token', 
-        'refresh_token': 'refresh token'
+
+    {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6Zm",
+        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6Zm"
     }
 
 Loading Video details

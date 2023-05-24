@@ -33,6 +33,7 @@ def post_data():
         print(resp.json())
     else:
         print(resp.json())
+    
  
 def register_user():
     url = 'http://localhost:5000/api/v1/auth/register'
@@ -48,6 +49,28 @@ def register_user():
         print(resp.json())
     else:
         print(resp.json())
+        
+def activate_account():
+    url = 'http://localhost:5000/api/v1/auth/activate'
+    user_id = 1
+    activation_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ5MTA3MTQsImlhdCI6MTY4NDkwMzUxNCwic3ViIjoxfQ.cDndKPsrTVIA0fcr8ucX99q7THhaBKjbqHvLpSoYDa0'
+    resp = requests.get(url, params={'user_id':user_id, 'activation_token':activation_token})
+    if resp.ok:
+        print(resp.json())
+    else:
+        print(resp.json())
+        
+def login_user():
+    url = 'http://localhost:5000/api/v1/auth/login'
+    login_details = {
+        'email_address': 'lyle@gmail.com',
+        'password': 'password'
+    }
+    resp = requests.post(url, json=login_details)
+    if resp.ok:
+        print(resp.json())
+    else:
+        print(resp.json())
 
-if __name__ == '__main__':
-    register_user()        
+if __name__ == '__main__': 
+    login_user()        
