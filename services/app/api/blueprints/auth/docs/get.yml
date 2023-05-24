@@ -1,4 +1,4 @@
-description: Delete the user with the given id.
+description: Get a User with the given id.
 tags:
   - User
 produces:
@@ -6,7 +6,7 @@ produces:
 security:
   - APIKeyHeader: [ 'Authorization' ]
 parameters:
-  - in: query 
+  - in: query
     description: The query should contain the user id.
     required: false
     name: 'user_id'
@@ -14,7 +14,7 @@ parameters:
 
 responses:
   200:
-    description: When a User is successfully deleted.
+    description: When a User is successfully retrieved.
 
   400:
-    description: Fails to delete a User due to bad request data, such as invalid title name or non-existant video id.
+    description: Fails to get a User due to bad request data, such as invalid title name or non-existant video id.

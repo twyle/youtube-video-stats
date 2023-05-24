@@ -1,40 +1,12 @@
-description: Admin Registration
+description: Get a refresh token
 tags:
   - Authentication
 produces:
   - "application/json"
-parameters:
-  - name: "First Name"
-    description: "The First name"
-    required: true
-    in: "formData"
-  - name: "Last Name"
-    description: "The Last name"
-    required: true
-    in: "formData"
-    type: string
-  - name: "Email Address"
-    description: "The Admin email"
-    required: true
-    in: "formData"
-    type: string
-  - name: "Password"
-    description: "The Admin password"
-    required: false
-    in: "formData"
-    type: password
-  - name: "Profile Picture"
-    description: "Admin's profile picture"
-    required: false
-    in: "formData"
-    type: file
-
+get:
+  description: Get a refresh token.
 responses:
-  201:
-    description: When a user succesfully registers.
-
-  400:
-    description: Fails to Register admin due to bad request data
-
-  409:
-    description: Fails to Register author since author with given details exists.
+  200:
+    description: When the user gets a new access token.
+  401:
+    description: When the access token is not included in the request.

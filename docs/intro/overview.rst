@@ -185,7 +185,7 @@ Here is a sample output:
 Loading Video details
 =====================
 To get the latest 10 uploaded videos to the Test channel, send a 
-``get request`` to the ``/api/v1/auth/channels/channel`` with the channel id.
+``get request`` to the ``/api/v1/auth/videos`` with the channel id.
 
 To get the channel id's send a ``get request`` to the ``/api/v1/auth/channels/channel``
 route. This gives you back channel details.
@@ -196,12 +196,15 @@ To get the 10 latest videos in Python:
 
     import requests
 
-    def load_latest_videos():
-        channel_id = 1
-        url = 'http://localhost:5000/api/v1/channels/channel'}
-        resp = requests.get(url, params={'channel_id': 1})
+    def get_videos():
+        url = 'http://localhost:5000/api/v1/videos'
+        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY4NDkwNzQ2OCwianRpIjoiOTk5ZTBkMzItNjcxMC00YWYwLTkyYzktMTQ0MDljNjU4ZmNkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjg0OTA3NDY4LCJleHAiOjE2ODQ5MDgzNjh9.j0ClUjFyRnl8w8BrQ-dL8z_CCkr87D-LTaIn6jbXCDw"
+        headers = {"Authorization": f"Bearer {token}"}
+        resp = requests.get(url, headers=headers)
         if resp.ok:
-            print(resp.json)
+            print(resp.json())
+        else:
+            print(resp.json())
 
     if __name__ == '__main__':
         load_latest_videos()

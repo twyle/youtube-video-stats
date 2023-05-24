@@ -29,7 +29,8 @@ class SQLiteUserRepository(BaseRepository[User]):
             password TEXT NOT NULL,
             date_registered TEXT NOT NULL,
             date_updated TEXT,
-            account_activated INTEGER
+            account_activated INTEGER,
+            role TEXT
         )
         """
         )
@@ -41,10 +42,10 @@ class SQLiteUserRepository(BaseRepository[User]):
             cursor.execute(
             """
             INSERT INTO users (first_name, last_name, email_address, password, date_registered, 
-            date_updated, account_activated) VALUES (?, ?, ?, ?, ?, ?, ?)
+            date_updated, account_activated, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (user.first_name, user.last_name, user.email_address, user.password, 
-             user.date_registered, user.date_updated, user.account_activated)
+             user.date_registered, user.date_updated, user.account_activated, user.role)
             )
         except IntegrityError as e:
             raise UserExistsException('The user already exists.') from e
@@ -57,7 +58,7 @@ class SQLiteUserRepository(BaseRepository[User]):
         cursor.execute(
         """
         SELECT id, first_name, last_name, email_address, password, date_registered, date_updated, 
-        account_activated FROM users WHERE id=?
+        account_activated, role FROM users WHERE id=?
         """,
         ((user_id,))
         )
@@ -71,7 +72,8 @@ class SQLiteUserRepository(BaseRepository[User]):
                 password=row[4],
                 date_registered=row[5],
                 date_updated=row[6],
-                account_activated=row[7]
+                account_activated=row[7],
+                role=row[8]
             )
         raise UserDoesNotExistException('The given user does not exist.')
     
@@ -80,7 +82,7 @@ class SQLiteUserRepository(BaseRepository[User]):
         cursor.execute(
         """
         SELECT id, first_name, last_name, email_address, password, date_registered, date_updated, 
-        account_activated FROM users WHERE email_address=?
+        account_activated, role FROM users WHERE email_address=?
         """,
         ((user_email,))
         )
@@ -94,7 +96,8 @@ class SQLiteUserRepository(BaseRepository[User]):
                 password=row[4],
                 date_registered=row[5],
                 date_updated=row[6],
-                account_activated=row[7]
+                account_activated=row[7],
+                role=row[8]
             )
         raise UserDoesNotExistException('The given user does not exist.')
     
@@ -103,10 +106,10 @@ class SQLiteUserRepository(BaseRepository[User]):
         cursor.execute(
         """
         UPDATE users SET first_name=?, last_name=?, email_address=?, password=?, account_activated=?
-        WHERE id=?
+        , role=? WHERE id=?
         """,
         (user.first_name, user.last_name, user.email_address, user.password, user.account_activated, 
-         user.id)
+         user.role, user.id)
         )
         return user
     
@@ -135,7 +138,8 @@ class SQLiteUserRepository(BaseRepository[User]):
                     password=row[4],
                     date_registered=row[5],
                     date_updated=row[6],
-                    account_activated=row[7]
+                    account_activated=row[7],
+                    role=row[8]
                 )
                 for row in rows
             ]
@@ -156,7 +160,8 @@ class SQLiteUserRepository(BaseRepository[User]):
                     password=row[4],
                     date_registered=row[5],
                     date_updated=row[6],
-                    account_activated=row[7]
+                    account_activated=row[7],
+                    role=row[8]
                 )
                 for row in rows
             ]

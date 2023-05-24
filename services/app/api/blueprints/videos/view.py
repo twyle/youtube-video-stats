@@ -6,13 +6,16 @@ from ...controllers.controllers.video_controller_factory import (
     DeleteVideoControllerFactory, GetVideosControllerFactory, AddManyVideosControllerFactory,
     QueryVideosControllerFactory
 )
+from flask_jwt_extended import jwt_required
+from ..decorators import admin_token_required
 
 
 videos = Blueprint('videos', __name__)
 
 
-@swag_from('./docs/add.yml', endpoint='videos.add', methods=['POST'])
 @videos.route('/video', methods=['POST'])
+@admin_token_required
+@swag_from('./docs/add.yml', endpoint='videos.add', methods=['POST'])
 def add():
     controller = AddVideoControllerFactory()
     response_builder = ResponseBuilder()
@@ -26,8 +29,10 @@ def add():
     )
     return api_response
 
-@swag_from('./docs/add_many.yml', endpoint='videos.add_many', methods=['POST'])
+
 @videos.route('/', methods=['POST'])
+@admin_token_required
+@swag_from('./docs/add_many.yml', endpoint='videos.add_many', methods=['POST'])
 def add_many():
     controller = AddManyVideosControllerFactory()
     response_builder = ResponseBuilder()
@@ -41,8 +46,9 @@ def add_many():
     )
     return api_response
 
-@swag_from('./docs/get.yml', endpoint='videos.get', methods=['GET'])
 @videos.route('/video', methods=['GET'])
+@jwt_required()
+@swag_from('./docs/get.yml', endpoint='videos.get', methods=['GET'])
 def get():
     controller = GetVideoControllerFactory()
     response_builder = ResponseBuilder()
@@ -56,8 +62,10 @@ def get():
     )
     return api_response
 
-@swag_from('./docs/update.yml', endpoint='videos.update', methods=['PUT'])
+
 @videos.route('/video', methods=['PUT'])
+@admin_token_required
+@swag_from('./docs/update.yml', endpoint='videos.update', methods=['PUT'])
 def update():
     controller = UpdateVideoControllerFactory()
     response_builder = ResponseBuilder()
@@ -71,8 +79,10 @@ def update():
     )
     return api_response
 
-@swag_from('./docs/delete.yml', endpoint='videos.delete', methods=['DELETE'])
+
 @videos.route('/video', methods=['DELETE'])
+@admin_token_required
+@swag_from('./docs/delete.yml', endpoint='videos.delete', methods=['DELETE'])
 def delete():
     controller = DeleteVideoControllerFactory()
     response_builder = ResponseBuilder()
@@ -87,8 +97,9 @@ def delete():
     return api_response
 
 
-@swag_from('./docs/videos.yml', endpoint='videos.list_all', methods=['GET'])
 @videos.route('/', methods=['GET'])
+@jwt_required()
+@swag_from('./docs/videos.yml', endpoint='videos.list_all', methods=['GET'])
 def list_all():
     controller = GetVideosControllerFactory()
     response_builder = ResponseBuilder()
@@ -103,8 +114,9 @@ def list_all():
     return api_response
 
 
-@swag_from('./docs/advanced_search.yml', endpoint='videos.advanced_search', methods=['POST'])
 @videos.route('/advanced', methods=['POST'])
+@jwt_required()
+@swag_from('./docs/advanced_search.yml', endpoint='videos.advanced_search', methods=['POST'])
 def advanced_search():
     controller = QueryVideosControllerFactory()
     response_builder = ResponseBuilder()
@@ -119,8 +131,9 @@ def advanced_search():
     return api_response
 
 
-@swag_from('./docs/comments.yml', endpoint='videos.get_video_comments', methods=['GET'])
 @videos.route('/video/comments', methods=['GET'])
+@jwt_required()
+@swag_from('./docs/comments.yml', endpoint='videos.get_video_comments', methods=['GET'])
 def get_video_comments():
     """Get the comments for a particular video."""
     return 'Video Comments.'

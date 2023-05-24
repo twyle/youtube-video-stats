@@ -20,15 +20,17 @@ def generate_data():
     return data
 
 def post_data():
-    url = 'http://localhost:5000/videos/'
+    url = 'http://localhost:5000/api/v1/videos/'
+    admin_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODU1MjAxOTcsImlhdCI6MTY4NDkxNTM5Nywic3ViIjoyfQ.hne-aXvET8nSwzK1EVtC3-0hPZE_Sa4njp8ZH1u7rkk"
+    headers = {"Authorization": f"Bearer {admin_token}"}
 
     videos = {
         'videos': [
-            generate_data() for _ in range(150)
+            generate_data() for _ in range(5)
         ]
     }
     
-    resp = requests.post(url, json=videos)
+    resp = requests.post(url, json=videos, headers=headers)
     if resp.ok:
         print(resp.json())
     else:
@@ -71,6 +73,26 @@ def login_user():
         print(resp.json())
     else:
         print(resp.json())
+        
+def get_videos():
+    url = 'http://localhost:5000/api/v1/videos'
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY4NDkxNTIzNCwianRpIjoiYTcyOGQ0NzEtNDc3Yi00ZGJmLWJmZmYtNWJhMzU0ZGYwNWMwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjg0OTE1MjM0LCJleHAiOjE2ODUwMDE2MzR9.vapCGWOlCAHZPd72ZDz_MM8cV4wdZMDQdH7452TGaCA"
+    headers = {"Authorization": f"Bearer {token}"}
+    resp = requests.get(url, headers=headers)
+    if resp.ok:
+        print(resp.json())
+    else:
+        print(resp.json())
+        
+def test_admin():
+    url = 'http://localhost:5000/api/v1/videos'
+    admin_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODU1MjAxOTcsImlhdCI6MTY4NDkxNTM5Nywic3ViIjoyfQ.hne-aXvET8nSwzK1EVtC3-0hPZE_Sa4njp8ZH1u7rkk"
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    resp = requests.get(url, headers=headers)
+    if resp.ok:
+        print(resp.json())
+    else:
+        print(resp.json())
 
 if __name__ == '__main__': 
-    login_user()        
+    post_data()        
