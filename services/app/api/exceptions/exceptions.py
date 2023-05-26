@@ -1,3 +1,9 @@
+class ResourceExistsException(Exception):
+    """Raised when an existing resource is added to the Repository."""
+    
+class ResourceNotExistException(Exception):
+    """Raised when a resource being fetched does not exist in the repository."""
+
 class VideoExistsException(Exception):
     """Raised when an existing video is added to the Repository."""
     

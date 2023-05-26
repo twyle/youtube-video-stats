@@ -1,4 +1,4 @@
-description: Add a Channel.
+description: Update a Channel.
 tags:
   - Channels
 consumes:
@@ -8,6 +8,11 @@ produces:
 security:
   - APIKeyHeader: [ 'Authorization' ]
 parameters:
+  - in: query
+    description: The query should contain the channel id.
+    required: false
+    name: 'channel_id'
+    type: 'string'
   - name: body
     description: The body should contain the channel details.
     in: body

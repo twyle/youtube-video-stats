@@ -4,7 +4,7 @@ from ..repositories.base_repository import BaseRepository
 from ..usecases.use_case import UseCase
 from ..usecases.user_use_cases import (
     CreateUserUseCase, GetAllUsersUseCase, DeleteUserUseCase, ActivateUserUseCase,
-    LoginUserUseCase, CreateAdminUseCase, GetUserUseCase
+    LoginUserUseCase, CreateAdminUseCase, GetUserUseCase, UpdateUserUseCase
 )
 from ..models.user_model import User
 
@@ -21,6 +21,13 @@ class GetUserSQLiteFactory(SQLiteRequestHandlerFactory):
     
     def get_use_case(self) -> UseCase:
         return GetUserUseCase()
+    
+class UpdateUserSQLiteFactory(SQLiteRequestHandlerFactory):
+    def get_repository(self) -> BaseRepository[User]:
+        return SQLiteUserRepository()
+    
+    def get_use_case(self) -> UseCase:
+        return UpdateUserUseCase()
     
 class DeleteUserSQLiteFactory(SQLiteRequestHandlerFactory):
     def get_repository(self) -> BaseRepository[User]:

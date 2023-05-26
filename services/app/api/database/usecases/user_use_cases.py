@@ -57,15 +57,13 @@ class UpdateUserUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             user_id = data['user_id']
-            user = uow.repository.delete(user_id)
+            user = uow.repository.get_by_id(user_id)
             if data.get('first_name'):
                 user.first_name = data.get('first_name')
             if data.get('last_name'):
                 user.last_name = data.get('last_name')
             if data.get('email_address'):
                 user.email_address = data.get('email_address')
-            if data.get('password'):
-                user.password = data.get('password')
             uow.repository.update(user)
         return dataclasses.asdict(user)
     

@@ -4,7 +4,7 @@ from ..data_validators.validator_factory import ValidatorList
 from flask import Request
 from ...database.request_handler.request_handler import RequestHandler
 from ...exceptions.exceptions import (
-    VideoExistsException, VideoDoesNotExistException, UserExistsException, UserDoesNotExistException
+    ResourceExistsException, ResourceNotExistException
 )
 from jwt import ExpiredSignatureError, InvalidTokenError
 
@@ -14,14 +14,10 @@ class Controller(BaseController):
         try:
             api_request_data = self.handle_request(request_builder, data_validators, 
                                 request_object, request_handler)
-        except (VideoExistsException, UserExistsException) as e:
+        except ResourceExistsException as e:
             return {'Error': str(e)}, 409
-        except (VideoDoesNotExistException, UserDoesNotExistException) as e:
+        except ResourceNotExistException as e:
             return {'Error': str(e)}, 404
-        except ExpiredSignatureError:
-            return {'Error': 'The activation token has expired. Create a new account.'}
-        except InvalidTokenError:
-            return {'Error': 'The activation token is invalid. Create a new account.'}
         except ValueError as e:
             return {'Error': str(e)}, 404
         else:

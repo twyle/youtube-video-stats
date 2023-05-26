@@ -3,9 +3,11 @@ from flasgger import swag_from
 from ...controllers.response_builders.create_response import ResponseBuilder
 from ...controllers.controllers.user_controller_factory import (
     CreateUserControllerFactory, DeleteUserControllerFactory, ListUsersControllerFactory,
-    ActivateAccountControllerFactory, LoginUserControllerFactory, GetUserControllerFactory
+    ActivateAccountControllerFactory, LoginUserControllerFactory, GetUserControllerFactory,
+    UpdateUserControllerFactory
 )
 from ..decorators import admin_token_required
+from flask_jwt_extended import jwt_required
 
 
 auth = Blueprint('auth', __name__)
@@ -27,10 +29,27 @@ def register_client():
 
 
 @auth.route('/get', methods=['GET'])
-@admin_token_required
+@jwt_required()
 @swag_from('./docs/get.yml', endpoint='auth.get_client', methods=['GET'])
 def get_client(): 
     controller = GetUserControllerFactory()
+    create_user_builder = ResponseBuilder()
+    api_response = (
+        create_user_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
+
+
+@auth.route('/update', methods=['PUT'])
+@jwt_required()
+@swag_from('./docs/update.yml', endpoint='auth.update_client', methods=['PUT'])
+def update_client():
+    controller = UpdateUserControllerFactory()
     create_user_builder = ResponseBuilder()
     api_response = (
         create_user_builder.with_data_validators(controller.get_request_data_validator())

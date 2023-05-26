@@ -3,7 +3,7 @@ from typing import Any, Optional
 from ..models.video_model import Video
 from sqlite3 import IntegrityError
 from ...exceptions.exceptions import (
-    VideoExistsException, VideoDoesNotExistException
+    ResourceExistsException, ResourceNotExistException
 )
 
 class SQLiteVideoRepository(BaseRepository[Video]):
@@ -54,7 +54,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
              video.date_published)
             )
         except IntegrityError as e:
-            raise VideoExistsException('The video already exists.') from e
+            raise ResourceExistsException('The video already exists.') from e
         else:
             video.id = cursor.lastrowid
             return video
@@ -84,7 +84,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                 date_published=row[10]
             )
         else:
-            raise VideoDoesNotExistException('The video was not found.')
+            raise ResourceNotExistException('The video was not found.')
     
     def update(self, video: Video) -> Video:
         cursor = self.connection.cursor()
