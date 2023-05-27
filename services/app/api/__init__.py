@@ -2,6 +2,7 @@ from flask import Flask
 from .helpers.register_blueprints import register_blueprints
 from .helpers.register_extensions import register_extensions
 from .helpers.helpers import set_configuration
+from .helpers.error_handlers import register_error_handlers
 
 
 def create_app() -> Flask:
@@ -9,6 +10,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     
     set_configuration(app)
+    register_error_handlers(app)
     register_extensions(app)
     register_blueprints(app)
     
