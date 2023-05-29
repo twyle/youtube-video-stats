@@ -1,5 +1,6 @@
 from ..database.models.channel_model import Channel
 from ..database.models.video_model import Video
+from ..database.models.playlist_model import Playlist
 from typing import Optional
 import os
 import json
@@ -82,3 +83,19 @@ def create_channels(file: str) -> None:
     url = 'http://localhost:5000/api/v1/channels/'
     resp = post_data(url=url, data=data)
     print(resp.json())
+    
+def get_channel_playlists(channel_id: str) -> list[Playlist]:
+    """Get a channels playlists."""
+    playlists = youtube.find_channel_playlists(channel_id)
+    return playlists
+    
+def add_channel_playlists(channel_id: str) -> None:
+    """Add the channels playlists."""
+    playlists = get_channel_playlists(channel_id)
+    data = {
+        'playlists': [pl.to_dict() for pl in playlists]
+    }
+    # url = 'http://localhost:5000/api/v1/playlists/'
+    # resp = post_data(url=url, data=data)
+    # print(resp.json())
+    print(data)

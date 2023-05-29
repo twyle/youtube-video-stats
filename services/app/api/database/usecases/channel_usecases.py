@@ -5,6 +5,7 @@ from .use_case import UseCase
 from flask import jsonify
 from ..models.channel_model import Channel
 from .querie_mixin import QueryMixin
+from ...exceptions.exceptions import ResourceExistsException
 
 class AddChannelUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -108,7 +109,8 @@ class AddManyChannelsUseCase(UseCase):
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            channel_data_list = data['channels']
+            channel_data_list: list[dict[str, str|int]] = data['channels']
+            channels_added: int = 0
             for data in channel_data_list:
                 channel = Channel(
                     channel_id=data['channel_id'],
@@ -121,8 +123,12 @@ class AddManyChannelsUseCase(UseCase):
                     videos_count=data['videos_count'],
                     published_at=data['published_at']
                 )
-                uow.repository.add(channel)
-        return {'Channels Added': f'{len(channel_data_list)}'}
+                try:
+                    uow.repository.add(channel)
+                    channels_added += 1
+                except ResourceExistsException:
+                    pass
+        return {'Channels Added': channels_added}
     
     
 class QueryChannelUseCase(QueryMixin, UseCase):
