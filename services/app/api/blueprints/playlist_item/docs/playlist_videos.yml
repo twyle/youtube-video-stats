@@ -1,15 +1,15 @@
-description: Get all the channel playlists
+description: Get all the Playlist Item Video.
 tags:
-  - Channels
+  - Playlist Items
 produces:
   - "application/json"
 security:
   - APIKeyHeader: [ 'Authorization' ]
 parameters:
   - in: query
-    description: The query should contain the channel id.
+    description: The query should contain the playlist item id.
     required: true
-    name: 'channel_id'
+    name: 'playlist_item_id'
     type: 'string'
 
 responses:

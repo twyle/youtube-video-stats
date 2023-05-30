@@ -137,6 +137,7 @@ class SQLiteChannelRepository(BaseRepository[Channel]):
     
     def query(self, query_string: str) -> list[Channel]:
         cursor = self.connection.cursor()
+        print(query_string)
         cursor.execute(query_string)
         rows = cursor.fetchall()
         if rows:

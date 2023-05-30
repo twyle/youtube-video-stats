@@ -1,6 +1,6 @@
 description: Get all the channel playlists
 tags:
-  - Channels
+  - Playlists
 produces:
   - "application/json"
 security:

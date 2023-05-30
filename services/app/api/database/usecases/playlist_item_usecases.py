@@ -3,76 +3,74 @@ from typing import Optional, Any
 import dataclasses
 from .use_case import UseCase
 from flask import jsonify
-from ..models.playlist_model import Playlist
+from ..models.playlist_item_model import PlaylistItemModel
 from .querie_mixin import QueryMixin
 from ...exceptions.exceptions import ResourceExistsException
 
-class AddPlaylistUseCase(UseCase):
+class AddPlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlist = Playlist(
+            # add channel
+            # add playlist
+            # add video
+            playlist_item = PlaylistItemModel(
+                playlist_item_id=data['playlist_item_id'],
+                channel_adder_id=data['channel_adder_id'],
+                video_owner_channel_id=data['video_owner_channel_id'],
                 playlist_id=data['playlist_id'],
-                playlist_title=data['playlist_title'],
-                playlist_description=data['playlist_description'],
-                playlist_thumbnail=data['playlist_thumbnail'],
-                videos_count=data['videos_count'],
-                published_at=data['published_at'],
-                channel_id=data['channel_id']
+                video_id=data['video_id'],
+                position=data['position'],
+                privacy_status=data['privacy_status'],
+                date_added=data['date_added']
             )
-            uow.repository.add(playlist)
-        return dataclasses.asdict(playlist)
+            uow.repository.add(playlist_item)
+        return dataclasses.asdict(playlist_item)
     
 
-class GetPlaylistUseCase(UseCase):
+class GetPlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlist_id = data['playlist_id']
-            playlist = uow.repository.get_by_id(playlist_id)
-        return dataclasses.asdict(playlist)
+            playlist_item_id = data['playlist_item_id']
+            playlist_item = uow.repository.get_by_id(playlist_item_id)
+        return dataclasses.asdict(playlist_item)
     
-class DeletePlaylistUseCase(UseCase):
+class DeletePlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlist_id = data['playlist_id']
-            playlist = uow.repository.get_by_id(playlist_id)
-            uow.repository.delete(playlist_id)
-        return dataclasses.asdict(playlist)
+            playlist_item_id = data['playlist_item_id']
+            playlist_item = uow.repository.get_by_id(playlist_item_id)
+            uow.repository.delete(playlist_item_id)
+        return dataclasses.asdict(playlist_item)
     
 
-class UpdatePlaylistUseCase(UseCase):
+class UpdatePlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlist_id = data['playlist_id']
-            playlist = uow.repository.get_by_id(playlist_id)
-            if data.get('playlist_title'):
-                playlist.playlist_title = data.get('playlist_title')
-            if data.get('videos_count'):
-                playlist.videos_count = data.get('videos_count')
-            if data.get('playlist_description'):
-                playlist.playlist_description = data.get('playlist_description')
-            if data.get('playlist_id'):
-                playlist.playlist_id = data.get('playlist_id')
-            if data.get('playlist_thumbnail'):
-                playlist.playlist_thumbnail = data.get('playlist_thumbnail')
-            if data.get('published_at'):
-                playlist.published_at = data.get('published_at')
-            uow.repository.update(playlist)
-        return dataclasses.asdict(playlist)
+            playlist_item_id = data['playlist_item_id']
+            playlist_item = uow.repository.get_by_id(playlist_item_id)
+            if data.get('position'):
+                playlist_item.position = data.get('position')
+            if data.get('privacy_status'):
+                playlist_item.privacy_status = data.get('privacy_status')
+            if data.get('date_added'):
+                playlist_item.date_added = data.get('date_added')
+            uow.repository.update(playlist_item)
+        return dataclasses.asdict(playlist_item)
     
     
-class GetPlaylistsUseCase(UseCase):
+class GetPlaylistItemsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
@@ -90,44 +88,45 @@ class GetPlaylistsUseCase(UseCase):
                 offset = data.get('offset')
             if data.get('sort_order'):
                 sort_order = data.get('sort_order')
-            playlists = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
+            playlist_items = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
                                              sort_order=sort_order)
-        return jsonify(playlists)
+        return jsonify(playlist_items)
     
     
-class AddManyPlaylistsUseCase(UseCase):
+class AddManyPlaylistItemsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlist_data_list: list[dict[str, str|int]] = data['playlists']
-            playlists_added: int = 0
-            for data in playlist_data_list:
-                playlist = Playlist(
+            playlist_item_data_list: list[dict[str, str|int]] = data['playlist_items']
+            playlist_items_added: int = 0
+            for data in playlist_item_data_list:
+                playlist_item = PlaylistItemModel(
+                    playlist_item_id=data['playlist_item_id'],
+                    channel_adder_id=data['channel_adder_id'],
+                    video_owner_channel_id=data['video_owner_channel_id'],
                     playlist_id=data['playlist_id'],
-                    playlist_title=data['playlist_title'],
-                    playlist_description=data['playlist_description'],
-                    playlist_thumbnail=data['playlist_thumbnail'],
-                    videos_count=data['videos_count'],
-                    published_at=data['published_at'],
-                    channel_id=data['channel_id']
+                    video_id=data['video_id'],
+                    position=data['position'],
+                    privacy_status=data['privacy_status'],
+                    date_added=data['date_added']
                 )
                 try:
-                    uow.repository.add(playlist)
-                    playlists_added += 1
+                    uow.repository.add(playlist_item)
+                    playlist_items_added += 1
                 except ResourceExistsException:
                     pass
-        return {'playlists Added': playlists_added}
+        return {'playlist items Added': playlist_items_added}
     
     
-class QueryPlaylistUseCase(QueryMixin, UseCase):
+class QueryPlaylistItemUseCase(QueryMixin, UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
         
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlists = []
+            playlist_items = []
             query_data = {
                 'query': {
                     'channel_id': {

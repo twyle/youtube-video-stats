@@ -111,10 +111,20 @@ def channel_videos():
     return 'Channel Videos'
 
 
-@swag_from('./docs/add.yml', endpoint='channels.channel_playlists', methods=['GET'])
+@swag_from('./docs/videos.yml', endpoint='channels.channel_playlists', methods=['GET'])
 @channels.route('/channel/playlists', methods=['GET'])
 def channel_playlists():
-    return 'Channel Playlists'
+    controller = QueryChannelsControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
 
 
 @swag_from('./docs/add.yml', endpoint='channels.channel_comments', methods=['GET'])

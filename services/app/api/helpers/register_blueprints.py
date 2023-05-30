@@ -3,6 +3,7 @@ from ..blueprints.auth.view import auth
 from ..blueprints.channels.view import channels
 from ..blueprints.admin.view import admin
 from ..blueprints.playlists.view import playlists
+from ..blueprints.playlist_item.view import playlist_items
 from flask import Flask
 
 
@@ -13,3 +14,4 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(channels, url_prefix='/api/v1/channels')
     app.register_blueprint(admin, url_prefix='/api/v1/admin')
     app.register_blueprint(playlists, url_prefix='/api/v1/playlists')
+    app.register_blueprint(playlist_items, url_prefix='/api/v1/playlist_item')

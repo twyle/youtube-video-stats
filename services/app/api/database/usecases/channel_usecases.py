@@ -138,11 +138,24 @@ class QueryChannelUseCase(QueryMixin, UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             channels = []
-            channel_data_list = uow.repository.query(self.generate_query(data))
+            query_data = {
+                'query': {
+                    'channel_id': {
+                        'eq': data['channel_id']
+                    }
+                },
+                'fields': ['playlist_title','channel_title']
+            }
+            print(query_data)
+            q = f"""
+            SELECT playlist_title, channel_title from playlists inner join channels on 
+            channels.channel_id = playlists.channel_id where channels.channel_id = '{data['channel_id']}';
+            """
+            channel_data_list = uow.repository.query(q)
             if channel_data_list:
                 for channel_data in channel_data_list:
                     d = {}
                     for i, item in enumerate(channel_data):
-                        d[data['fields'][i]] = item
+                        d[query_data['fields'][i]] = item
                     channels.append(d)
-        return jsonify(channels)
+        return jsonify(channels) 

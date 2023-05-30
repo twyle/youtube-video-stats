@@ -1,6 +1,6 @@
 from .queries.filters import (
     GreaterThanFilter, LessThanFilter, InFilter, NotInFilter, GreaterThanEqualToFilter,
-    LessThanEqualToFilter, LessThanGreaterThanFilter, BetweenFilter
+    LessThanEqualToFilter, LessThanGreaterThanFilter, BetweenFilter, EqualFilter
 )
 from .queries.query_builder import QueryBuilder
 from .queries.query_generator import QueryGenerator
@@ -13,7 +13,7 @@ from .queries.query_limiters import QueryLimiters
 class QueryMixin:       
     @staticmethod    
     def generate_query(data: dict[str, dict[str, Any]]):
-        query = """SELECT * FROM videos"""
+        query = """SELECT * FROM playlists"""
         filters = QueryMixin.generate_filters()
         query_builder = QueryBuilder(filters)
         limiters = QueryMixin.generate_limiters()
@@ -33,7 +33,8 @@ class QueryMixin:
             LessThanGreaterThanFilter(),
             BetweenFilter(),
             InFilter(),
-            NotInFilter()
+            NotInFilter(),
+            EqualFilter()
         ]
         
     @staticmethod
