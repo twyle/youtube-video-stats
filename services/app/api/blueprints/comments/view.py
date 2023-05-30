@@ -1,20 +1,20 @@
 from flask import Blueprint, request
 from flasgger import swag_from
 from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.controllers.playlist_item_controller_factory import (
-    AddPlaylistItemControllerFactory, GetPlaylistItemControllerFactory, UpdatePlaylistItemControllerFactory, 
-    DeletePlaylistItemControllerFactory, GetPlaylistItemsControllerFactory, AddManyPlaylistItemsControllerFactory,
-    QueryPlaylistItemsControllerFactory
+from ...controllers.controllers.channel_controller_factory import (
+    AddChannelControllerFactory, GetChannelControllerFactory, UpdateChannelControllerFactory, 
+    DeleteChannelControllerFactory, GetChannelsControllerFactory, AddManyChannelsControllerFactory,
+    QueryChannelsControllerFactory
 )
 
 
-playlist_items = Blueprint('playlist_items', __name__)
+comments = Blueprint('comments', __name__)
 
 
-@swag_from('./docs/add.yml', endpoint='playlist_items.add', methods=['POST'])
-@playlist_items.route('/playlist', methods=['POST'])
+@swag_from('./docs/add.yml', endpoint='comments.add', methods=['POST'])
+@comments.route('/comment', methods=['POST'])
 def add():
-    controller = AddPlaylistItemControllerFactory()
+    controller = AddChannelControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -26,10 +26,10 @@ def add():
     )
     return api_response 
 
-@swag_from('./docs/update.yml', endpoint='playlist_items.update', methods=['PUT'])
-@playlist_items.route('/playlist', methods=['PUT'])
+@swag_from('./docs/update.yml', endpoint='comments.update', methods=['PUT'])
+@comments.route('/comment', methods=['PUT'])
 def update():
-    controller = UpdatePlaylistItemControllerFactory()
+    controller = UpdateChannelControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -41,10 +41,10 @@ def update():
     )
     return api_response
 
-@swag_from('./docs/delete.yml', endpoint='playlist_items.delete', methods=['DELETE'])
-@playlist_items.route('/playlist', methods=['DELETE'])
+@swag_from('./docs/delete.yml', endpoint='comments.delete', methods=['DELETE'])
+@comments.route('/comment', methods=['DELETE'])
 def delete():
-    controller = DeletePlaylistItemControllerFactory()
+    controller = DeleteChannelControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -56,10 +56,10 @@ def delete():
     )
     return api_response
 
-@swag_from('./docs/get.yml', endpoint='playlist_items.get', methods=['GET'])
-@playlist_items.route('/playlist', methods=['GET'])
+@swag_from('./docs/get.yml', endpoint='comments.get', methods=['GET'])
+@comments.route('/comment', methods=['GET'])
 def get():
-    controller = GetPlaylistItemControllerFactory()
+    controller = GetChannelControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -72,11 +72,11 @@ def get():
     return api_response
 
 
-@playlist_items.route('/', methods=['POST'])
+@comments.route('/', methods=['POST'])
 # @admin_token_required
-@swag_from('./docs/add_many.yml', endpoint='playlist_items.add_many', methods=['POST'])
+@swag_from('./docs/add_many.yml', endpoint='comments.add_many', methods=['POST'])
 def add_many():
-    controller = AddManyPlaylistItemsControllerFactory()
+    controller = AddManyChannelsControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -89,10 +89,10 @@ def add_many():
     return api_response
 
 
-@swag_from('./docs/playlist_items.yml', endpoint='playlist_items.list_all_playlist_items', methods=['GET'])
-@playlist_items.route('/', methods=['GET'])
-def list_all_playlist_items(): 
-    controller = GetPlaylistItemsControllerFactory()
+@swag_from('./docs/comments.yml', endpoint='comments.list_all_comments', methods=['GET'])
+@comments.route('/', methods=['GET'])
+def list_all_comments(): 
+    controller = GetChannelsControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -105,7 +105,23 @@ def list_all_playlist_items():
     return api_response
 
 
-@swag_from('./docs/playlist_videos.yml', endpoint='playlist_items.videos', methods=['GET'])
-@playlist_items.route('/playlist/videos', methods=['GET'])
-def videos():
-    return 'Playlist Videos'
+@swag_from('./docs/videos.yml', endpoint='comments.video_comments', methods=['GET'])
+@comments.route('/video/', methods=['GET'])
+def video_comments():
+    controller = QueryChannelsControllerFactory()
+    response_builder = ResponseBuilder()
+    api_response = (
+        response_builder.with_data_validators(controller.get_request_data_validator())
+        .with_request_builder(controller.get_request_builder())
+        .with_request_object(request)
+        .with_request_handler(controller.get_request_handler())
+        .with_controller(controller.get_controller())
+        .build()
+    )
+    return api_response
+
+
+@swag_from('./docs/channels.yml', endpoint='comments.channel_comments', methods=['GET'])
+@comments.route('/channel/', methods=['GET'])
+def channel_comments():
+    return 'Channel Comments'

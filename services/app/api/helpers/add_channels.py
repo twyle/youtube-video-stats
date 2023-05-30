@@ -1,11 +1,15 @@
 from ..database.models.channel_model import Channel
 from ..database.models.video_model import Video
 from ..database.models.playlist_model import Playlist
+from ..database.models.playlist_item_model import PlaylistItemModel
 from typing import Optional
 import os
 import json
 from youtube import YouTube
 import requests
+from youtube.models.comment_thread_model import CommentThread, VideoCommentThread, VideoComment
+from youtube.models.comment_model import CommentAuthor, Comment
+from typing import Iterator
 
 
 client_secrets_file = '/home/lyle/Downloads/python_learning_site.json'
@@ -89,13 +93,94 @@ def get_channel_playlists(channel_id: str) -> list[Playlist]:
     playlists = youtube.find_channel_playlists(channel_id)
     return playlists
     
+def add_many_channels(channel_ids: list[str]) -> None:
+    """Add many channels."""
+    channels = youtube.find_channel_by_id(channel_ids)
+    if not isinstance(channels, list):
+        channels = [channels]
+    data = {
+        'channels': [channel.to_dict() for channel in channels]
+    }
+    # print(data)
+    url = 'http://localhost:5000/api/v1/channels/'
+    resp = post_data(url=url, data=data)
+    print(resp.json())
+    
+def add_many_videos(video_ids: list[str]) -> None:
+    """Add many videos."""
+    videos: list[Video] = youtube.find_video_by_id(video_ids)
+    data = {
+        'videos': [video.to_dict() for video in videos]
+    }
+    # print(data)
+    url = 'http://localhost:5000/api/v1/videos/'
+    resp = post_data(url=url, data=data)
+    print(resp.json())
+    
+def add_playlist(playlist: Playlist) -> None:
+    """Add a single playlist."""
+    # print(playlist.to_dict())
+    url = 'http://localhost:5000/api/v1/playlists/playlist'
+    resp = post_data(url=url, data=playlist.to_dict())
+    print(resp.json())
+    
+def add_many_playlist_items(playlist_items: PlaylistItemModel) -> None:
+    """Add many playlist items."""
+    data: dict[str, list[dict[str, str|int]]] = {
+        'playlist_items': [pl.to_dict() for pl in playlist_items]
+    }
+    # print(data)
+    url = 'http://localhost:5000/api/v1/playlist_items/'
+    resp = post_data(url=url, data=data)
+    print(resp.json())
+    
+def get_video_comments(video_id: str) -> list[dict[str, int | str]]:
+    """Get a videos comments."""
+    search_iterator: Iterator = youtube.find_video_comments(video_id, max_results=20)
+    video_comment_threads: list[VideoCommentThread] = list(next(search_iterator)) 
+    data: list[dict[str, int | str]] = []
+    for video_comment_thread in video_comment_threads:
+        comment: Comment = video_comment_thread.top_level_comment.comment
+        author: CommentAuthor = video_comment_thread.top_level_comment.comment.comment_author
+        video_comment = {
+            'video_id': video_comment_thread.video_id,
+            'author_display_name': author.author_display_name,
+            'author_profile_image_url': author.author_profile_image_url,
+            'author_channel_url': author.author_channel_url,
+            'author_channel_id': author.author_channel_id,
+            'comment_id': comment.comment_id,
+            'comment_text': comment.text_display,
+            'like_count': comment.like_count,
+            'published_at': comment.published_at,
+            'updated_at': comment.updated_at,
+            'parent_id': comment.parent_id
+        }
+        data.append(video_comment)
+    print(data)
+    return data
+    
+def add_palylist_items(playlist: Playlist) -> None:
+    """Add playlist items."""
+    playlist_id: str = playlist.playlist_id
+    playlist_items: list[PlaylistItemModel] = list(next(youtube.find_playlist_items(playlist_id, max_results=25)))
+    channel_ids = []
+    video_ids = []
+    for playlist_item in playlist_items:
+        if playlist_item.video_owner_channel_id not in channel_ids:
+            channel_ids.append(playlist_item.video_owner_channel_id)
+        if playlist_item.channel_adder_id not in channel_ids:
+            channel_ids.append(playlist_item.channel_adder_id)
+        if playlist_item.video_id not in video_ids:
+            video_ids.append(playlist_item.video_id)
+    
+    add_many_channels(channel_ids)        
+    add_many_videos(video_ids)
+    add_playlist(playlist)
+    add_many_playlist_items(playlist_items)
+    
 def add_channel_playlists(channel_id: str) -> None:
     """Add the channels playlists."""
     playlists = get_channel_playlists(channel_id)
-    data = {
-        'playlists': [pl.to_dict() for pl in playlists]
-    }
-    # url = 'http://localhost:5000/api/v1/playlists/'
-    # resp = post_data(url=url, data=data)
-    # print(resp.json())
-    print(data)
+    for playlist in playlists:
+        add_palylist_items(playlist)
+    

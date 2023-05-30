@@ -5,6 +5,7 @@ from .use_case import UseCase
 from flask import jsonify
 from ..models.video_model import Video
 from .querie_mixin import QueryMixin
+from ...exceptions.exceptions import ResourceExistsException
 
 class AddVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
@@ -22,7 +23,8 @@ class AddVideoUseCase(UseCase):
                 views_count=data['views_count'],
                 likes_count=data['likes_count'],
                 comments_count=data['comments_count'],
-                date_published=data['date_published']
+                published_at=data['published_at'],
+                channel_id=data['channel_id']
             )
             uow.repository.add(video)
         return dataclasses.asdict(video)
@@ -76,8 +78,8 @@ class UpdateVideoUseCase(UseCase):
                 video.video_title = data.get('video_title')
             if data.get('views_count'):
                 video.views_count = data.get('views_count')
-            if data.get('date_published'):
-                video.date_published = data.get('date_published')
+            if data.get('published_at'):
+                video.published_at = data.get('published_at')
             uow.repository.update(video)
         return dataclasses.asdict(video)
     
@@ -112,7 +114,9 @@ class AddManyVideoUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             video_data_list = data['videos']
+            videos_added: int = 0
             for video_data in video_data_list:
+                print(video_data)
                 video = Video(
                     video_id=video_data['video_id'],
                     video_title=video_data['video_title'],
@@ -123,10 +127,15 @@ class AddManyVideoUseCase(UseCase):
                     views_count=video_data['views_count'],
                     likes_count=video_data['likes_count'],
                     comments_count=video_data['comments_count'],
-                    date_published=video_data['date_published']
+                    published_at=video_data['published_at'],
+                    channel_id=video_data['channel_id']
                 )
-                uow.repository.add(video)
-        return {'Videos Added': f'{len(video_data_list)}'}
+                try:
+                    uow.repository.add(video)
+                    videos_added += 1
+                except ResourceExistsException:
+                    pass
+        return {'Videos Added': videos_added}
     
     
 class QueryVideoUseCase(QueryMixin, UseCase):

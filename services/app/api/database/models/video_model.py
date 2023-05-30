@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from typing import Optional
 import datetime as dt
+from .resource_saver_mixins import ResourseSaverMixin
 
 @dataclass
-class Video:
+class Video(ResourseSaverMixin):
     video_id: str
     video_title: str
     channel_id: str
