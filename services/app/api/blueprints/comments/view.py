@@ -1,10 +1,10 @@
 from flask import Blueprint, request
 from flasgger import swag_from
 from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.controllers.channel_controller_factory import (
-    AddChannelControllerFactory, GetChannelControllerFactory, UpdateChannelControllerFactory, 
-    DeleteChannelControllerFactory, GetChannelsControllerFactory, AddManyChannelsControllerFactory,
-    QueryChannelsControllerFactory
+from ...controllers.controllers.comment_controller_factory import (
+    AddCommentControllerFactory, GetCommentControllerFactory, UpdateCommentControllerFactory, 
+    DeleteCommentControllerFactory, GetCommentsControllerFactory, AddManyCommentsControllerFactory,
+    QueryCommentsControllerFactory
 )
 
 
@@ -14,7 +14,7 @@ comments = Blueprint('comments', __name__)
 @swag_from('./docs/add.yml', endpoint='comments.add', methods=['POST'])
 @comments.route('/comment', methods=['POST'])
 def add():
-    controller = AddChannelControllerFactory()
+    controller = AddCommentControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -29,7 +29,7 @@ def add():
 @swag_from('./docs/update.yml', endpoint='comments.update', methods=['PUT'])
 @comments.route('/comment', methods=['PUT'])
 def update():
-    controller = UpdateChannelControllerFactory()
+    controller = UpdateCommentControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -44,7 +44,7 @@ def update():
 @swag_from('./docs/delete.yml', endpoint='comments.delete', methods=['DELETE'])
 @comments.route('/comment', methods=['DELETE'])
 def delete():
-    controller = DeleteChannelControllerFactory()
+    controller = DeleteCommentControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -59,7 +59,7 @@ def delete():
 @swag_from('./docs/get.yml', endpoint='comments.get', methods=['GET'])
 @comments.route('/comment', methods=['GET'])
 def get():
-    controller = GetChannelControllerFactory()
+    controller = GetCommentControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -76,7 +76,7 @@ def get():
 # @admin_token_required
 @swag_from('./docs/add_many.yml', endpoint='comments.add_many', methods=['POST'])
 def add_many():
-    controller = AddManyChannelsControllerFactory()
+    controller = AddManyCommentsControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -92,7 +92,7 @@ def add_many():
 @swag_from('./docs/comments.yml', endpoint='comments.list_all_comments', methods=['GET'])
 @comments.route('/', methods=['GET'])
 def list_all_comments(): 
-    controller = GetChannelsControllerFactory()
+    controller = GetCommentsControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -108,7 +108,7 @@ def list_all_comments():
 @swag_from('./docs/videos.yml', endpoint='comments.video_comments', methods=['GET'])
 @comments.route('/video/', methods=['GET'])
 def video_comments():
-    controller = QueryChannelsControllerFactory()
+    controller = QueryCommentsControllerFactory()
     response_builder = ResponseBuilder()
     api_response = (
         response_builder.with_data_validators(controller.get_request_data_validator())
@@ -121,7 +121,7 @@ def video_comments():
     return api_response
 
 
-@swag_from('./docs/channels.yml', endpoint='comments.channel_comments', methods=['GET'])
+@swag_from('./docs/channels.yml', endpoint='channels.channel_channels', methods=['GET'])
 @comments.route('/channel/', methods=['GET'])
-def channel_comments():
-    return 'Channel Comments'
+def channel_channels():
+    return 'channel channels'

@@ -11,8 +11,8 @@ parameters:
   - in: query
     description: The query should contain the comment id.
     required: false
-    name: 'comment_id'
-    type: 'string'
+    name: 'id'
+    type: 'int'
   - name: body
     description: The body should contain the comment details.
     in: body
@@ -22,6 +22,7 @@ parameters:
       required:
         - "video_id"
         - "author_id"
+        - "comment_id"
         - "comment_text"
         - "like_count"
         - "published_at"
@@ -35,6 +36,9 @@ parameters:
         author_id:
           type: "int"
           example: 1
+        comment_id:
+          type: "string"
+          example: "Ugw4vrYGPEN-Q1aXdZx4AaABAg"
         comment_text:
           type: "string"
           example: "Wow my high school rnb reminds me of my ex back in coast ii miss u ABDILLAHI ABDALLA😍😜😘😘."

@@ -9,8 +9,8 @@ parameters:
   - in: query
     description: The query should contain the comment id.
     required: false
-    name: 'comment_id'
-    type: 'string'
+    name: 'id'
+    type: 'int'
 
 responses:
   200:
