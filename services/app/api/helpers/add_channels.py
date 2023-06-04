@@ -136,28 +136,31 @@ def add_many_playlist_items(playlist_items: PlaylistItemModel) -> None:
     
 def get_video_comments(video_id: str) -> list[dict[str, int | str]]:
     """Get a videos comments."""
-    search_iterator: Iterator = youtube.find_video_comments(video_id, max_results=20)
+    search_iterator: Iterator = youtube.find_video_comments(video_id, max_results=5)
     video_comment_threads: list[VideoCommentThread] = list(next(search_iterator)) 
-    data: list[dict[str, int | str]] = []
+    authors: list[dict[str, str]] = []
+    comments: list[dict[str, str]] = []
     for video_comment_thread in video_comment_threads:
         comment: Comment = video_comment_thread.top_level_comment.comment
         author: CommentAuthor = video_comment_thread.top_level_comment.comment.comment_author
-        video_comment = {
-            'video_id': video_comment_thread.video_id,
-            'author_display_name': author.author_display_name,
-            'author_profile_image_url': author.author_profile_image_url,
-            'author_channel_url': author.author_channel_url,
-            'author_channel_id': author.author_channel_id,
-            'comment_id': comment.comment_id,
-            'comment_text': comment.text_display,
-            'like_count': comment.like_count,
-            'published_at': comment.published_at,
-            'updated_at': comment.updated_at,
-            'parent_id': comment.parent_id
-        }
-        data.append(video_comment)
-    print(data)
-    return data
+        authors.append(author.to_dict())
+        video_comment: dict[str, str] = comment.to_dict()
+        comments.append(video_comment)
+        # video_comment = {
+        #     'video_id': video_comment_thread.video_id,
+        #     'author_display_name': author.author_display_name,
+        #     'author_profile_image_url': author.author_profile_image_url,
+        #     'author_channel_url': author.author_channel_url,
+        #     'author_channel_id': author.author_channel_id,
+        #     'comment_id': comment.comment_id,
+        #     'comment_text': comment.text_display,
+        #     'like_count': comment.like_count,
+        #     'published_at': comment.published_at,
+        #     'updated_at': comment.updated_at,
+        #     'parent_id': comment.parent_id
+        # }
+    print(authors)
+    print(comments)
     
 def add_palylist_items(playlist: Playlist) -> None:
     """Add playlist items."""

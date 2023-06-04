@@ -6,6 +6,7 @@ from ...controllers.controllers.channel_controller_factory import (
     DeleteChannelControllerFactory, GetChannelsControllerFactory, AddManyChannelsControllerFactory,
     QueryChannelsControllerFactory
 )
+from ..flow import flow
 
 
 channels = Blueprint('channels', __name__)
@@ -15,61 +16,27 @@ channels = Blueprint('channels', __name__)
 @channels.route('/channel', methods=['POST'])
 def add():
     controller = AddChannelControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response 
+    return flow(controller) 
 
 @swag_from('./docs/update.yml', endpoint='channels.update', methods=['PUT'])
 @channels.route('/channel', methods=['PUT'])
 def update():
     controller = UpdateChannelControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
+
 
 @swag_from('./docs/delete.yml', endpoint='channels.delete', methods=['DELETE'])
 @channels.route('/channel', methods=['DELETE'])
 def delete():
     controller = DeleteChannelControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
+
 
 @swag_from('./docs/get.yml', endpoint='channels.get', methods=['GET'])
 @channels.route('/channel', methods=['GET'])
 def get():
     controller = GetChannelControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @channels.route('/', methods=['POST'])
@@ -77,32 +44,14 @@ def get():
 @swag_from('./docs/add_many.yml', endpoint='channels.add_many', methods=['POST'])
 def add_many():
     controller = AddManyChannelsControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @swag_from('./docs/channels.yml', endpoint='channels.list_all_channels', methods=['GET'])
 @channels.route('/', methods=['GET'])
 def list_all_channels(): 
     controller = GetChannelsControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @swag_from('./docs/add.yml', endpoint='channels.channel_Channels', methods=['GET'])
@@ -115,16 +64,7 @@ def channel_videos():
 @channels.route('/channel/playlists', methods=['GET'])
 def channel_playlists():
     controller = QueryChannelsControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @swag_from('./docs/add.yml', endpoint='channels.channel_comments', methods=['GET'])

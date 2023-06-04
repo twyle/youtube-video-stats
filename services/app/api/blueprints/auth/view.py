@@ -8,6 +8,7 @@ from ...controllers.controllers.user_controller_factory import (
 )
 from ..decorators import admin_token_required
 from flask_jwt_extended import jwt_required
+from ..flow import flow
 
 
 auth = Blueprint('auth', __name__)
@@ -16,16 +17,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/register', methods=['POST'])
 def register_client():
     controller = CreateUserControllerFactory()
-    create_user_builder = ResponseBuilder()
-    api_response = (
-        create_user_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @auth.route('/get', methods=['GET'])
@@ -33,16 +25,7 @@ def register_client():
 @swag_from('./docs/get.yml', endpoint='auth.get_client', methods=['GET'])
 def get_client(): 
     controller = GetUserControllerFactory()
-    create_user_builder = ResponseBuilder()
-    api_response = (
-        create_user_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @auth.route('/update', methods=['PUT'])
@@ -50,16 +33,7 @@ def get_client():
 @swag_from('./docs/update.yml', endpoint='auth.update_client', methods=['PUT'])
 def update_client():
     controller = UpdateUserControllerFactory()
-    create_user_builder = ResponseBuilder()
-    api_response = (
-        create_user_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @auth.route('/delete', methods=['DELETE'])
@@ -67,16 +41,7 @@ def update_client():
 @swag_from('./docs/delete.yml', endpoint='auth.delete_client', methods=['DELETE'])
 def delete_client():
     controller = DeleteUserControllerFactory()
-    create_user_builder = ResponseBuilder()
-    api_response = (
-        create_user_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @auth.route('/users', methods=['GET'])
@@ -84,32 +49,15 @@ def delete_client():
 @swag_from('./docs/users.yml', endpoint='auth.list_all', methods=['GET'])
 def list_all():
     controller = ListUsersControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
+
 
 @swag_from('./docs/activate.yml', endpoint='auth.activate_account', methods=['GET'])
 @auth.route('/activate', methods=['GET'])
 def activate_account():
     """Activate User account."""
     controller = ActivateAccountControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @swag_from('./docs/login.yml', endpoint='auth.login_client', methods=['POST'])
@@ -117,16 +65,7 @@ def activate_account():
 def login_client():
     """Login a registered, confirmed client."""
     controller = LoginUserControllerFactory()
-    response_builder = ResponseBuilder()
-    api_response = (
-        response_builder.with_data_validators(controller.get_request_data_validator())
-        .with_request_builder(controller.get_request_builder())
-        .with_request_object(request)
-        .with_request_handler(controller.get_request_handler())
-        .with_controller(controller.get_controller())
-        .build()
-    )
-    return api_response
+    return flow(controller)
 
 
 @swag_from('./docs/password_reset.yml', endpoint='auth.request_client_password_rest', methods=['GET'])
