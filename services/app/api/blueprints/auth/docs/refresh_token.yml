@@ -3,8 +3,15 @@ tags:
   - Authentication
 produces:
   - "application/json"
-get:
-  description: Get a refresh token.
+security:
+  - APIKeyHeader: [ 'Authorization' ]
+parameters:
+  - in: query
+    description: The query should contain the user email address.
+    required: true
+    name: 'email_address'
+    type: 'string'
+
 responses:
   200:
     description: When the user gets a new access token.
