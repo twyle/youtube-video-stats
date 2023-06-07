@@ -129,6 +129,10 @@ import os
 from typing import Optional
 from youtube.models.video_model import Video
 
+client_secrets_file = '/home/lyle/Downloads/temp.json'
+youtube = YouTube(client_secrets_file)
+youtube.authenticate()
+
 def save_to_channels(video: Video, file_name: Optional[str] = "kenyan_channels.json") -> None:
     kenyan_channels = []
     if video:
@@ -211,3 +215,7 @@ To use the API, you will need an activated user account. This involves:
 #### Listing Channels
 
 To list the channels added, you need to authorize your requests.
+
+<p align=center>
+  <img src="assets/videos/channels.gif" />
+</p>
