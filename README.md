@@ -21,7 +21,7 @@
 
 ## Application Overview
 
-This an API that provides data on the videos posted by Kenyan Social media influencers on YouTube. This includes all the videos posted in their respective youtube channels and includes stats such as date posted, number of views, likes, comments as well as the video comments.
+This an API that provides data on the videos posted by Kenyan Social media influencers on YouTube. This includes all the videos posted in their respective youtube channels and includes stats such as date posted, number of views, likes, comments as well as the video comments
 
 <img src="assets/images/video-stats.png" class="img-responsive" alt="">
 
