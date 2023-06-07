@@ -21,7 +21,7 @@ def register_client():
 
 
 @auth.route('/get', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 @swag_from('./docs/get.yml', endpoint='auth.get_client', methods=['GET'])
 def get_client(): 
     controller = GetUserControllerFactory()
@@ -29,7 +29,7 @@ def get_client():
 
 
 @auth.route('/update', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 @swag_from('./docs/update.yml', endpoint='auth.update_client', methods=['PUT'])
 def update_client():
     controller = UpdateUserControllerFactory()
@@ -37,7 +37,7 @@ def update_client():
 
 
 @auth.route('/delete', methods=['DELETE'])
-@admin_token_required
+# @admin_token_required
 @swag_from('./docs/delete.yml', endpoint='auth.delete_client', methods=['DELETE'])
 def delete_client():
     controller = DeleteUserControllerFactory()
@@ -45,7 +45,7 @@ def delete_client():
 
 
 @auth.route('/users', methods=['GET'])
-@admin_token_required
+# @admin_token_required
 @swag_from('./docs/users.yml', endpoint='auth.list_all', methods=['GET'])
 def list_all():
     controller = ListUsersControllerFactory()
@@ -68,10 +68,13 @@ def login_client():
     return flow(controller)
 
 
-@swag_from('./docs/password_reset.yml', endpoint='auth.request_client_password_rest', methods=['GET'])
+@swag_from('./docs/password_reset.yml', endpoint='auth.request_client_password_reset', methods=['GET'])
 @auth.route('/request_password_reset', methods=['GET'])
 def request_client_password_rest():
     """Request a client password reset."""
+    # get email address
+    # confirm user exists
+    # give them access token
     return 'Password reset.'
 
 
@@ -79,12 +82,20 @@ def request_client_password_rest():
 @auth.route('/reset_password', methods=['POST'])
 def reset_client_password():
     """Reset a client password."""
+    # provide token
+    # provide email
+    # provide password
     return 'Password reset.'
 
 
-@swag_from('./docs/refresh_token.yml', endpoint='auth.refresh_token', methods=['POST'])
 @auth.route('/refresh_token', methods=['POST'])
+@swag_from('./docs/refresh_token.yml', endpoint='auth.refresh_token', methods=['POST'])
 def refresh_token():
     """Refresh an expired token."""
-    return 'Hey'
+    # user_id = request.args.get('user_id')
+    # if not access_token:
+    #     return {'Error': 'The refresh token has to be provided.'}, 401
+    # access_token = create_access_token(user_id)
+    # return access_token
+    
     
