@@ -219,3 +219,9 @@ To list the channels added, you need to authorize your requests.
 <p align=center>
   <img src="assets/videos/channels.gif" />
 </p>
+
+## Deployment
+
+## How to Contribute
+
+## Get in Touch
