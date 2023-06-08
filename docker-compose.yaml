@@ -11,8 +11,8 @@ services:
       - 5000:5000
     # expose:  # new
     #   - 5000
-#     env_file:
-#       - ./services/app/.env
+    env_file:
+      - /home/lyle/.env
 #     labels:  # new
 #       - "traefik.enable=true"
 #       - "traefik.http.routers.flask.rule=Host(`photo-app.techwithlyle.xyz`)"
