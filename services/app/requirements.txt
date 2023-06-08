@@ -1,9 +1,9 @@
-python-dotenv
+python-dotenv==1.0.0
 flask==2.2.2
 gunicorn==20.1.0
 flasgger==0.9.5
 flask-bcrypt==1.0.1
 flask-jwt-extended==4.4.4
-sphinx
-recommonmark
-sphinx_rtd_theme
+Sphinx==6.2.1
+sphinx-rtd-theme==1.2.0
+recommonmark==0.7.1

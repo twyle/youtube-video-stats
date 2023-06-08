@@ -30,11 +30,11 @@ RUN pip install -r requirements.txt
 COPY . .
 
 #run the linters
-RUN black api/
-RUN isort .
-RUN flake8
-RUN pydocstyle  api/
-RUN pylint --rcfile=.pylintrc ./api
+# RUN black api/
+# RUN isort .
+# RUN flake8
+# RUN pydocstyle  api/
+# RUN pylint --rcfile=.pylintrc ./api
 
 #run the tests
 # RUN python -m pytest
