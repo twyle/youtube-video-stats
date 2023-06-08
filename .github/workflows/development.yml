@@ -215,4 +215,4 @@ jobs:
     - name: Test application
       run: |
         sleep 5
-        curl ${{ secrets.HOST_NAME  }}:5000 | grep "api"
+        curl ${{ secrets.HOST_NAME  }}:5000 | grep "stats API"
