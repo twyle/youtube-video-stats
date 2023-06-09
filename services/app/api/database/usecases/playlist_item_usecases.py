@@ -1,16 +1,19 @@
-from ..repositories.unit_of_work import BaseUnitfWork
-from typing import Optional, Any
 import dataclasses
-from .use_case import UseCase
+from typing import Any, Optional
+
 from flask import jsonify
-from ..models.playlist_item_model import PlaylistItemModel
-from .querie_mixin import QueryMixin
+
 from ...exceptions.exceptions import ResourceExistsException
+from ..models.playlist_item_model import PlaylistItemModel
+from ..repositories.unit_of_work import BaseUnitfWork
+from .querie_mixin import QueryMixin
+from .use_case import UseCase
+
 
 class AddPlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             # add channel
@@ -24,38 +27,39 @@ class AddPlaylistItemUseCase(UseCase):
                 video_id=data['video_id'],
                 position=data['position'],
                 privacy_status=data['privacy_status'],
-                date_added=data['date_added']
+                date_added=data['date_added'],
             )
             uow.repository.add(playlist_item)
         return dataclasses.asdict(playlist_item)
-    
+
 
 class GetPlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             playlist_item_id = data['playlist_item_id']
             playlist_item = uow.repository.get_by_id(playlist_item_id)
         return dataclasses.asdict(playlist_item)
-    
+
+
 class DeletePlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             playlist_item_id = data['playlist_item_id']
             playlist_item = uow.repository.get_by_id(playlist_item_id)
             uow.repository.delete(playlist_item_id)
         return dataclasses.asdict(playlist_item)
-    
+
 
 class UpdatePlaylistItemUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             playlist_item_id = data['playlist_item_id']
@@ -68,12 +72,12 @@ class UpdatePlaylistItemUseCase(UseCase):
                 playlist_item.date_added = data.get('date_added')
             uow.repository.update(playlist_item)
         return dataclasses.asdict(playlist_item)
-    
-    
+
+
 class GetPlaylistItemsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             sort_field = 'id'
@@ -88,18 +92,19 @@ class GetPlaylistItemsUseCase(UseCase):
                 offset = data.get('offset')
             if data.get('sort_order'):
                 sort_order = data.get('sort_order')
-            playlist_items = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
-                                             sort_order=sort_order)
+            playlist_items = uow.repository.list_all(
+                sort_field=sort_field, limit=limit, offset=offset, sort_order=sort_order
+            )
         return jsonify(playlist_items)
-    
-    
+
+
 class AddManyPlaylistItemsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            playlist_item_data_list: list[dict[str, str|int]] = data['playlist_items']
+            playlist_item_data_list: list[dict[str, str | int]] = data['playlist_items']
             playlist_items_added: int = 0
             for data in playlist_item_data_list:
                 playlist_item = PlaylistItemModel(
@@ -110,7 +115,7 @@ class AddManyPlaylistItemsUseCase(UseCase):
                     video_id=data['video_id'],
                     position=data['position'],
                     privacy_status=data['privacy_status'],
-                    date_added=data['date_added']
+                    date_added=data['date_added'],
                 )
                 try:
                     uow.repository.add(playlist_item)
@@ -118,27 +123,25 @@ class AddManyPlaylistItemsUseCase(UseCase):
                 except ResourceExistsException:
                     pass
         return {'playlist items Added': playlist_items_added}
-    
-    
+
+
+# flake8: noqa: W291
 class QueryPlaylistItemUseCase(QueryMixin, UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             playlist_items = []
             query_data = {
-                'query': {
-                    'channel_id': {
-                        'eq': data['channel_id']
-                    }
-                },
-                'fields': ['id', 'playlist_id', 'playlist_title','channel_id']
+                'query': {'channel_id': {'eq': data['channel_id']}},
+                'fields': ['id', 'playlist_id', 'playlist_title', 'channel_id'],
             }
             print(query_data)
             # playlist_data_list = uow.repository.query(self.generate_query(query_data))
             q = f"""
-            SELECT id, playlist_id, playlist_title, channel_id FROM playlists WHERE channel_id = '{data['channel_id']}' ORDER BY id ASC LIMIT 10 OFFSET 0
+            SELECT id, playlist_id, playlist_title, channel_id FROM playlists WHERE channel_id =
+            '{data['channel_id']}' ORDER BY id ASC LIMIT 10 OFFSET 0
             """
             playlist_data_list = uow.repository.query(q)
             if playlist_data_list:
@@ -146,5 +149,5 @@ class QueryPlaylistItemUseCase(QueryMixin, UseCase):
                     d = {}
                     for i, item in enumerate(playlist_data):
                         d[query_data['fields'][i]] = item
-                    playlists.append(d)
-        return jsonify(playlists)
+                    playlist_items.append(d)
+        return jsonify(playlist_items)

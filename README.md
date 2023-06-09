@@ -59,7 +59,7 @@ The various endpoints are protected. Access will require either an ``access_toke
 
 ## Getting Started
 
-- This API has been tested on Ubuntu 22.04 with Python 3.10
+- This API has been tested on Ubuntu 22.04 with Python 3.10+
 - It uses SQLite database by default, witth raw sql queries. Implementation that uses an ORM with PostgreSQL is under development.
 - The application is containerized, so ensure docker and docker compose are installed in your computer.
 
@@ -109,24 +109,28 @@ Make sure to store the admin token.
 
 ### Seeding the database
 
-For this we will use a python library called ```ayv``` to obtain the various data points that we need from YouTube. In this example we will add a couple of channels.
+For this we will use a python library called ``ayv`` to obtain the various data points that we need from YouTube. In this example we will add a couple of channels.
 
-You can read more about ```ayv``` from its documentation site:
+You can read more about ``ayv`` from its documentation site:
 [ayv documentation](https://youtube-wrapper.readthedocs.io/en/latest/)
 
-#### Install ```ayv```
+#### Install ``ayv``
+
 1. Create a python3 virtual environment
+
 ```sh
 python3 -m venv venv
 ```
-2. Install ```ayv```
+
+2. Install ``ayv``
+
 ```sh
 pip install ayv
 ```
 
 #### Get channel data
 
-To use the ```ayv``` library to obtain channel data, we need the channel id. We can get the channel id by obtaining it from videos belonginging to the channel.
+To use the ``ayv`` library to obtain channel data, we need the channel id. We can get the channel id by obtaining it from videos belonginging to the channel.
 Here is an example script that uses a video id to fetch channel details including the title and id then saves them to disk:
 
 ```python
@@ -160,10 +164,10 @@ def save_to_channels(video: Video, file_name: Optional[str] = "kenyan_channels.j
 
 Simply call the function with the video id for a channel whose details you want.
 
-Within ```youtube-video-stats/services/app``` is a file called ```kenyan_channels.json``` with a bunch of channel ids that we will use.
-
+Within ``youtube-video-stats/services/app`` is a file called ``kenyan_channels.json`` with a bunch of channel ids that we will use.
 
 #### Add channel data
+
 Here we will add a bunch of channels to the database:
 
 ```python
@@ -176,7 +180,7 @@ def find_channel(channel_id: str) -> Channel:
 def post_data(data: dict[str, int|str], url: str) -> dict[str, str]:
     admin_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODU1MjAxOTcsImlhdCI6MTY4NDkxNTM5Nywic3ViIjoyfQ.hne-aXvET8nSwzK1EVtC3-0hPZE_Sa4njp8ZH1u7rkk"
     headers = {"Authorization": f"Bearer {admin_token}"}
-    
+
     resp = requests.post(url, json=data, headers=headers)
     return resp
 
@@ -189,7 +193,7 @@ def load_channels(file: str) -> list[str]:
             for data in channel_list:
                 channel_ids.append(list(data.values())[0])
     return channel_ids
-    
+
 def create_channels(file: str) -> None:
     """Create the channels."""
     channel_ids = load_channels(file)
@@ -205,9 +209,10 @@ def create_channels(file: str) -> None:
     print(resp.json())
 
 ```
-Call the ```create_channels``` function with a path to the ```kenyan_channels.json``` file. This will adfd the channels to the database. Make sure to replace the admin token.
 
-#### Creating a User 
+Call the ``create_channels`` function with a path to the ``kenyan_channels.json`` file. This will adfd the channels to the database. Make sure to replace the admin token.
+
+#### Creating a User
 
 To use the API, you will need an activated user account. This involves:
 
@@ -229,11 +234,11 @@ To list the channels added, you need to authorize your requests.
 
 ## Deployment
 
- - The application is containerized and deployed using an AWS EC2 instance. 
- - It uses the SQLite database.
- - Uses AWS Route53 to route internet traffic to the application.
- - It uses gunicorn with traefik.
- - The application is auto-deployed to AWS once the production checks pass.
+- The application is containerized and deployed using an AWS EC2 instance.
+- It uses the SQLite database.
+- Uses AWS Route53 to route internet traffic to the application.
+- It uses gunicorn with traefik.
+- The application is auto-deployed to AWS once the production checks pass.
 
  To try out the API, head over to the [YouTube Stats API](https://youtube-stats.oryks-sytem.com/apidocs/).
 
@@ -245,4 +250,14 @@ To contribute, chack out the [contribution guideline](CONTRIBUTING.md).
 
 The API uses an [MIT License](LICENSE)
 
-## Get in Touch
+## Developer
+
+Lyle Okoth – [@lylethedesigner](https://twitter.com/lylethedesigner) on twitter
+
+[lyle okoth](https://medium.com/@lyle-okoth) on medium
+
+My email is lyceokoth@gmail.com
+
+Here is my [GitHub Profile](https://github.com/twyle/)
+
+You can also find me on [Linkedin](https://www.linkedin.com/in/lyle-okoth/)

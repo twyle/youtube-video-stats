@@ -1,12 +1,13 @@
-from ..blueprints.videos.view import videos
+from flask import Flask
+
+from ..blueprints.admin.view import admin
 from ..blueprints.auth.view import auth
 from ..blueprints.channels.view import channels
-from ..blueprints.admin.view import admin
-from ..blueprints.playlists.view import playlists
-from ..blueprints.playlist_items.view import playlist_items
 from ..blueprints.comment_authors.view import comment_authors
 from ..blueprints.comments.view import comments
-from flask import Flask
+from ..blueprints.playlist_items.view import playlist_items
+from ..blueprints.playlists.view import playlists
+from ..blueprints.videos.view import videos
 
 
 def register_blueprints(app: Flask) -> None:

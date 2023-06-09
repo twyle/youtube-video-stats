@@ -1,6 +1,7 @@
+from flask import request
+
 from ..controllers.controllers.base_controller_factory import BaseControllerFactory
 from ..controllers.response_builders.create_response import ResponseBuilder
-from flask import request
 
 
 def flow(controller: BaseControllerFactory) -> tuple[dict, int]:
@@ -14,4 +15,3 @@ def flow(controller: BaseControllerFactory) -> tuple[dict, int]:
         .build()
     )
     return api_response
-    

@@ -1,16 +1,19 @@
-from ..repositories.unit_of_work import BaseUnitfWork
-from typing import Optional, Any
 import dataclasses
-from .use_case import UseCase
+from typing import Any, Optional
+
 from flask import jsonify
-from ..models.comment_model import Comment
-from .querie_mixin import QueryMixin
+
 from ...exceptions.exceptions import ResourceExistsException
+from ..models.comment_model import Comment
+from ..repositories.unit_of_work import BaseUnitfWork
+from .querie_mixin import QueryMixin
+from .use_case import UseCase
+
 
 class AddCommentUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             comment = Comment(
@@ -20,38 +23,39 @@ class AddCommentUseCase(UseCase):
                 parent_id=data['parent_id'],
                 like_count=data['like_count'],
                 published_at=data['published_at'],
-                updated_at=data['updated_at']
+                updated_at=data['updated_at'],
             )
             uow.repository.add(comment)
         return dataclasses.asdict(comment)
-    
+
 
 class GetCommentUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             comment_id = data['id']
             comment = uow.repository.get_by_id(comment_id)
         return dataclasses.asdict(comment)
-    
+
+
 class DeleteCommentUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             comment_id = data['id']
             comment = uow.repository.get_by_id(comment_id)
             uow.repository.delete(comment_id)
         return dataclasses.asdict(comment)
-    
+
 
 class UpdateCommentUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             comment_id = data['id']
@@ -72,12 +76,12 @@ class UpdateCommentUseCase(UseCase):
                 comment.updated_at = data.get('updated_at')
             uow.repository.update(comment)
         return dataclasses.asdict(comment)
-    
-    
+
+
 class GetCommentsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             sort_field = 'id'
@@ -92,18 +96,17 @@ class GetCommentsUseCase(UseCase):
                 offset = data.get('offset')
             if data.get('sort_order'):
                 sort_order = data.get('sort_order')
-            comments = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
-                                             sort_order=sort_order)
+            comments = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset, sort_order=sort_order)
         return jsonify(comments)
-    
-    
+
+
 class AddManyCommentsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            comment_data_list: list[dict[str, str|int]] = data['comments']
+            comment_data_list: list[dict[str, str | int]] = data['comments']
             comments_added: int = 0
             for data in comment_data_list:
                 comment = Comment(
@@ -113,7 +116,7 @@ class AddManyCommentsUseCase(UseCase):
                     parent_id=data['parent_id'],
                     like_count=data['like_count'],
                     published_at=data['published_at'],
-                    updated_at=data['updated_at']
+                    updated_at=data['updated_at'],
                 )
                 try:
                     uow.repository.add(comment)
@@ -121,12 +124,12 @@ class AddManyCommentsUseCase(UseCase):
                 except ResourceExistsException:
                     pass
         return {'Comments Added': comments_added}
-    
- 
-# TODO    
+
+
+# TODO
 class QueryCommentUseCase(QueryMixin, UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
-        raise NotImplementedError() 
+        raise NotImplementedError()

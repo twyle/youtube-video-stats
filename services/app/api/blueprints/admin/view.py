@@ -1,12 +1,15 @@
-from flask import Blueprint
 from flasgger import swag_from
+from flask import Blueprint
+
 from ...controllers.controllers.user_controller_factory import (
-    CreateAdminControllerFactory, DeleteUserControllerFactory, ListUsersControllerFactory
+    CreateAdminControllerFactory,
+    DeleteUserControllerFactory,
+    ListUsersControllerFactory,
 )
 from ..flow import flow
 
-
 admin = Blueprint('admin', __name__)
+
 
 @swag_from('./docs/register.yml', endpoint='admin.register', methods=['POST'])
 @admin.route('/register', methods=['POST'])

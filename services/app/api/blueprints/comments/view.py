@@ -1,13 +1,17 @@
-from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.controllers.comment_controller_factory import (
-    AddCommentControllerFactory, GetCommentControllerFactory, UpdateCommentControllerFactory, 
-    DeleteCommentControllerFactory, GetCommentsControllerFactory, AddManyCommentsControllerFactory,
-    QueryCommentsControllerFactory
-)
-from ..flow import flow
+from flask import Blueprint, request
 
+from ...controllers.controllers.comment_controller_factory import (
+    AddCommentControllerFactory,
+    AddManyCommentsControllerFactory,
+    DeleteCommentControllerFactory,
+    GetCommentControllerFactory,
+    GetCommentsControllerFactory,
+    QueryCommentsControllerFactory,
+    UpdateCommentControllerFactory,
+)
+from ...controllers.response_builders.create_response import ResponseBuilder
+from ..flow import flow
 
 comments = Blueprint('comments', __name__)
 
@@ -17,7 +21,7 @@ comments = Blueprint('comments', __name__)
 def add():
     controller = AddCommentControllerFactory()
     return flow(controller)
- 
+
 
 @swag_from('./docs/update.yml', endpoint='comments.update', methods=['PUT'])
 @comments.route('/comment', methods=['PUT'])
@@ -50,7 +54,7 @@ def add_many():
 
 @swag_from('./docs/comments.yml', endpoint='comments.list_all_comments', methods=['GET'])
 @comments.route('/', methods=['GET'])
-def list_all_comments(): 
+def list_all_comments():
     controller = GetCommentsControllerFactory()
     return flow(controller)
 
@@ -59,7 +63,7 @@ def list_all_comments():
 @comments.route('/video/', methods=['GET'])
 def video_comments():
     controller = QueryCommentsControllerFactory()
-    from ..flow import flow
+    return flow(controller)
 
 
 @swag_from('./docs/channels.yml', endpoint='channels.channel_channels', methods=['GET'])

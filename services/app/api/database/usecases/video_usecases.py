@@ -1,16 +1,19 @@
-from ..repositories.unit_of_work import BaseUnitfWork
-from typing import Optional, Any
 import dataclasses
-from .use_case import UseCase
+from typing import Any, Optional
+
 from flask import jsonify
-from ..models.video_model import Video
-from .querie_mixin import QueryMixin
+
 from ...exceptions.exceptions import ResourceExistsException
+from ..models.video_model import Video
+from ..repositories.unit_of_work import BaseUnitfWork
+from .querie_mixin import QueryMixin
+from .use_case import UseCase
+
 
 class AddVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             video = Video(
@@ -24,38 +27,39 @@ class AddVideoUseCase(UseCase):
                 likes_count=data['likes_count'],
                 comments_count=data['comments_count'],
                 published_at=data['published_at'],
-                channel_id=data['channel_id']
+                channel_id=data['channel_id'],
             )
             uow.repository.add(video)
         return dataclasses.asdict(video)
-    
+
 
 class GetVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             video_id = data['video_id']
             video = uow.repository.get_by_id(video_id)
         return dataclasses.asdict(video)
-    
+
+
 class DeleteVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             video_id = data['video_id']
             video = uow.repository.get_by_id(video_id)
             uow.repository.delete(video_id)
         return dataclasses.asdict(video)
-    
+
 
 class UpdateVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             id = int(data['id'])
@@ -82,12 +86,12 @@ class UpdateVideoUseCase(UseCase):
                 video.published_at = data.get('published_at')
             uow.repository.update(video)
         return dataclasses.asdict(video)
-    
-    
+
+
 class GetVideosUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             sort_field = 'id'
@@ -102,15 +106,14 @@ class GetVideosUseCase(UseCase):
                 offset = data.get('offset')
             if data.get('sort_order'):
                 sort_order = data.get('sort_order')
-            videos = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
-                                             sort_order=sort_order)
+            videos = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset, sort_order=sort_order)
         return jsonify(videos)
-    
-    
+
+
 class AddManyVideoUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             video_data_list = data['videos']
@@ -128,7 +131,7 @@ class AddManyVideoUseCase(UseCase):
                     likes_count=video_data['likes_count'],
                     comments_count=video_data['comments_count'],
                     published_at=video_data['published_at'],
-                    channel_id=video_data['channel_id']
+                    channel_id=video_data['channel_id'],
                 )
                 try:
                     uow.repository.add(video)
@@ -136,12 +139,12 @@ class AddManyVideoUseCase(UseCase):
                 except ResourceExistsException:
                     pass
         return {'Videos Added': videos_added}
-    
-    
+
+
 class QueryVideoUseCase(QueryMixin, UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             videos = []

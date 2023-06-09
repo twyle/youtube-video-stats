@@ -1,17 +1,22 @@
-from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.controllers.user_controller_factory import (
-    CreateUserControllerFactory, DeleteUserControllerFactory, ListUsersControllerFactory,
-    ActivateAccountControllerFactory, LoginUserControllerFactory, GetUserControllerFactory,
-    UpdateUserControllerFactory
-)
-from ..decorators import admin_token_required
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+
+from ...controllers.controllers.user_controller_factory import (
+    ActivateAccountControllerFactory,
+    CreateUserControllerFactory,
+    DeleteUserControllerFactory,
+    GetUserControllerFactory,
+    ListUsersControllerFactory,
+    LoginUserControllerFactory,
+    UpdateUserControllerFactory,
+)
+from ...controllers.response_builders.create_response import ResponseBuilder
+from ..decorators import admin_token_required
 from ..flow import flow
 
-
 auth = Blueprint('auth', __name__)
+
 
 @swag_from('./docs/register.yml', endpoint='auth.register_client', methods=['POST'])
 @auth.route('/register', methods=['POST'])
@@ -23,7 +28,7 @@ def register_client():
 @auth.route('/get', methods=['GET'])
 # @jwt_required()
 @swag_from('./docs/get.yml', endpoint='auth.get_client', methods=['GET'])
-def get_client(): 
+def get_client():
     controller = GetUserControllerFactory()
     return flow(controller)
 
@@ -68,7 +73,11 @@ def login_client():
     return flow(controller)
 
 
-@swag_from('./docs/password_reset.yml', endpoint='auth.request_client_password_reset', methods=['GET'])
+@swag_from(
+    './docs/password_reset.yml',
+    endpoint='auth.request_client_password_reset',
+    methods=['GET'],
+)
 @auth.route('/request_password_reset', methods=['GET'])
 def request_client_password_rest():
     """Request a client password reset."""
@@ -97,5 +106,3 @@ def refresh_token():
     #     return {'Error': 'The refresh token has to be provided.'}, 401
     # access_token = create_access_token(user_id)
     # return access_token
-    
-    
