@@ -8,88 +8,88 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Build:
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: Test
-  #   strategy:
-  #     matrix:
-  #       python-version: ['3.10', '3.11']
-  #   steps:
+  Build:
+    runs-on: ubuntu-latest
+    environment:
+      name: Test
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']
+    steps:
 
-  #   - name: Check out code
-  #     uses: actions/checkout@v2
+    - name: Check out code
+      uses: actions/checkout@v2
 
-  #   - name: Set up Python ${{ matrix.python-version }}
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
-  #   - name: Install dependencies
-  #     run: |
-  #       python -m pip install --upgrade pip
-  #       if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-  #       if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-  #   - name: Run the flake8 linter
-  #     run: flake8
+    - name: Run the flake8 linter
+      run: flake8
 
-  #   # - name: Run the pylint linter
-  #   #   run: pylint --rcfile=.pylintrc ./api
+    # - name: Run the pylint linter
+    #   run: pylint --rcfile=.pylintrc ./api
 
-  #   # - name: Run the mypy linter
-  #   #   run: mypy -p api
+    # - name: Run the mypy linter
+    #   run: mypy -p api
 
-  #   - name: Create the Test Environment variables
-  #     run: |
-  #       touch .env
-  #       echo ${{vars.FLASK_APP}}
-  #       echo FLASK_APP=${{vars.FLASK_APP}} >> .env
-  #       echo FLASK_ENV=${{vars.FLASK_ENV}} >> .env
-  #       echo FLASK_DEBUG=${{vars.FLASK_DEBUG}} >> .env
-  #       echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
+    - name: Create the Test Environment variables
+      run: |
+        touch .env
+        echo ${{vars.FLASK_APP}}
+        echo FLASK_APP=${{vars.FLASK_APP}} >> .env
+        echo FLASK_ENV=${{vars.FLASK_ENV}} >> .env
+        echo FLASK_DEBUG=${{vars.FLASK_DEBUG}} >> .env
+        echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
 
-  # Test-Local:
-  #   needs: [Build]
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: Test
-  #   strategy:
-  #     matrix:
-  #       python-version: ['3.10', '3.11']
-  #   steps:
-  #   - name: Check out code
-  #     uses: actions/checkout@v2
+  Test-Local:
+    needs: [Build]
+    runs-on: ubuntu-latest
+    environment:
+      name: Test
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
 
-  #   - name: Set up Python ${{ matrix.python-version }}
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
-  #   - name: Install dependencies
-  #     run: |
-  #       python -m pip install --upgrade pip
-  #       if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-  #       if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-  #   - name: Create the Environment variables
-  #     run: |
-  #       touch .env
-  #       echo FLASK_APP=${{vars.FLASK_APP}} >> .env
-  #       echo FLASK_ENV=${{vars.FLASK_ENV}} >> .env
-  #       echo FLASK_DEBUG=${{vars.FLASK_DEBUG}} >> .env
-  #       echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
+    - name: Create the Environment variables
+      run: |
+        touch .env
+        echo FLASK_APP=${{vars.FLASK_APP}} >> .env
+        echo FLASK_ENV=${{vars.FLASK_ENV}} >> .env
+        echo FLASK_DEBUG=${{vars.FLASK_DEBUG}} >> .env
+        echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
 
-  #   - name: Test application
-  #     run: |
-  #       python services/app/manage.py run &
-  #       sleep 10
-  #       curl http://127.0.0.1:5000/ | grep "stats API"
+    - name: Test application
+      run: |
+        python services/app/manage.py run &
+        sleep 10
+        curl http://127.0.0.1:5000/ | grep "stats API"
 
   DeployDev:
     name: Deploy to Dev
     # if: github.event_name == 'pull_request'
-    # needs: [Test-Local]
+    needs: [Test-Local]
     runs-on: ubuntu-latest
     environment:
       name: Development
