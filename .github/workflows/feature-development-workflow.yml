@@ -48,6 +48,7 @@ jobs:
         echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
 
   Test-Local:
+    needs: [Build]
     runs-on: ubuntu-latest
     environment:
       name: Test
