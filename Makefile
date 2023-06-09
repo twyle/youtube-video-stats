@@ -38,3 +38,5 @@ build-prod:
 
 run-prod:
 	@docker run -p5000:5000 --env-file=./services/app/.env youtube-video-stats-prod:latest
+
+# build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump
