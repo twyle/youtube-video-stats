@@ -59,7 +59,7 @@ The various endpoints are protected. Access will require either an ``access_toke
 
 ## Getting Started
 
-- This API has been tested on Ubuntu 22.04 with Python 3.8+
+- This API has been tested on Ubuntu 22.04 with Python 3.10+
 - It uses SQLite database by default, witth raw sql queries. Implementation that uses an ORM with PostgreSQL is under development.
 - The application is containerized, so ensure docker and docker compose are installed in your computer.
 
