@@ -69,16 +69,16 @@ jobs:
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    # - name: Create the Environment variables
-    #   run: |
-    #     touch .env
-    #     echo FLASK_APP=${{vars.FLASK_APP}} >> .env
-    #     echo FLASK_ENV=${{vars.FLASK_ENV}} >> .env
-    #     echo FLASK_DEBUG=${{vars.FLASK_DEBUG}} >> .env
-    #     echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
+    - name: Create the Environment variables
+      run: |
+        touch .env
+        echo FLASK_APP=${{vars.FLASK_APP}} >> .env
+        echo FLASK_ENV=${{vars.FLASK_ENV}} >> .env
+        echo FLASK_DEBUG=${{vars.FLASK_DEBUG}} >> .env
+        echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
 
-    # - name: Test application
-    #   run: |
-    #     python manage.py run &
-    #     sleep 10
-    #     curl http://127.0.0.1:5000/ | grep "stats API"
+    - name: Test application
+      run: |
+        python manage.py run &
+        sleep 10
+        curl http://127.0.0.1:5000/ | grep "stats API"
