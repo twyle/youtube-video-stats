@@ -1,14 +1,18 @@
-from flask import Blueprint
 from flasgger import swag_from
-from ...controllers.controllers.channel_controller_factory import (
-    AddChannelControllerFactory, GetChannelControllerFactory, UpdateChannelControllerFactory, 
-    DeleteChannelControllerFactory, GetChannelsControllerFactory, AddManyChannelsControllerFactory,
-    QueryChannelsControllerFactory
-)
-from ..flow import flow
-from ..decorators import admin_token_required
+from flask import Blueprint
 from flask_jwt_extended import jwt_required
 
+from ...controllers.controllers.channel_controller_factory import (
+    AddChannelControllerFactory,
+    AddManyChannelsControllerFactory,
+    DeleteChannelControllerFactory,
+    GetChannelControllerFactory,
+    GetChannelsControllerFactory,
+    QueryChannelsControllerFactory,
+    UpdateChannelControllerFactory,
+)
+from ..decorators import admin_token_required
+from ..flow import flow
 
 channels = Blueprint('channels', __name__)
 
@@ -17,7 +21,8 @@ channels = Blueprint('channels', __name__)
 @channels.route('/channel', methods=['POST'])
 def add():
     controller = AddChannelControllerFactory()
-    return flow(controller) 
+    return flow(controller)
+
 
 @swag_from('./docs/update.yml', endpoint='channels.update', methods=['PUT'])
 @channels.route('/channel', methods=['PUT'])
@@ -51,7 +56,7 @@ def add_many():
 @channels.route('/', methods=['GET'])
 @jwt_required()
 @swag_from('./docs/channels.yml', endpoint='channels.list_all_channels', methods=['GET'])
-def list_all_channels(): 
+def list_all_channels():
     controller = GetChannelsControllerFactory()
     return flow(controller)
 

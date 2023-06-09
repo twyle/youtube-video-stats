@@ -1,16 +1,19 @@
-from ..repositories.unit_of_work import BaseUnitfWork
-from typing import Optional, Any
 import dataclasses
-from .use_case import UseCase
+from typing import Any, Optional
+
 from flask import jsonify
-from ..models.channel_model import Channel
-from .querie_mixin import QueryMixin
+
 from ...exceptions.exceptions import ResourceExistsException
+from ..models.channel_model import Channel
+from ..repositories.unit_of_work import BaseUnitfWork
+from .querie_mixin import QueryMixin
+from .use_case import UseCase
+
 
 class AddChannelUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             channel = Channel(
@@ -22,38 +25,39 @@ class AddChannelUseCase(UseCase):
                 views_count=data['views_count'],
                 subscribers_count=data['subscribers_count'],
                 videos_count=data['videos_count'],
-                published_at=data['published_at']
+                published_at=data['published_at'],
             )
             uow.repository.add(channel)
         return dataclasses.asdict(channel)
-    
+
 
 class GetChannelUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             channel_id = data['channel_id']
             channel = uow.repository.get_by_id(channel_id)
         return dataclasses.asdict(channel)
-    
+
+
 class DeleteChannelUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             channel_id = data['channel_id']
             channel = uow.repository.get_by_id(channel_id)
             uow.repository.delete(channel_id)
         return dataclasses.asdict(channel)
-    
+
 
 class UpdateChannelUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             channel_id = data['channel_id']
@@ -78,12 +82,12 @@ class UpdateChannelUseCase(UseCase):
                 channel.published_at = data.get('published_at')
             uow.repository.update(channel)
         return dataclasses.asdict(channel)
-    
-    
+
+
 class GetChannelsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             sort_field = 'id'
@@ -98,18 +102,17 @@ class GetChannelsUseCase(UseCase):
                 offset = data.get('offset')
             if data.get('sort_order'):
                 sort_order = data.get('sort_order')
-            channels = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset,
-                                             sort_order=sort_order)
+            channels = uow.repository.list_all(sort_field=sort_field, limit=limit, offset=offset, sort_order=sort_order)
         return jsonify(channels)
-    
-    
+
+
 class AddManyChannelsUseCase(UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            channel_data_list: list[dict[str, str|int]] = data['channels']
+            channel_data_list: list[dict[str, str | int]] = data['channels']
             channels_added: int = 0
             for data in channel_data_list:
                 channel = Channel(
@@ -121,7 +124,7 @@ class AddManyChannelsUseCase(UseCase):
                     views_count=data['views_count'],
                     subscribers_count=data['subscribers_count'],
                     videos_count=data['videos_count'],
-                    published_at=data['published_at']
+                    published_at=data['published_at'],
                 )
                 try:
                     uow.repository.add(channel)
@@ -129,26 +132,23 @@ class AddManyChannelsUseCase(UseCase):
                 except ResourceExistsException:
                     pass
         return {'Channels Added': channels_added}
-    
-    
+
+
+# flake8: noqa: W291
 class QueryChannelUseCase(QueryMixin, UseCase):
     def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
         super().__init__(unit_of_work)
-        
+
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             channels = []
             query_data = {
-                'query': {
-                    'channel_id': {
-                        'eq': data['channel_id']
-                    }
-                },
-                'fields': ['playlist_title','channel_title']
+                'query': {'channel_id': {'eq': data['channel_id']}},
+                'fields': ['playlist_title', 'channel_title'],
             }
             print(query_data)
             q = f"""
-            SELECT playlist_title, channel_title from playlists inner join channels on 
+            SELECT playlist_title, channel_title from playlists inner join channels on
             channels.channel_id = playlists.channel_id where channels.channel_id = '{data['channel_id']}';
             """
             channel_data_list = uow.repository.query(q)
@@ -158,4 +158,4 @@ class QueryChannelUseCase(QueryMixin, UseCase):
                     for i, item in enumerate(channel_data):
                         d[query_data['fields'][i]] = item
                     channels.append(d)
-        return jsonify(channels) 
+        return jsonify(channels)

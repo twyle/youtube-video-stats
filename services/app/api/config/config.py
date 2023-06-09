@@ -8,6 +8,7 @@ BaseConfig:
 """
 import os
 from datetime import timedelta
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,9 +19,7 @@ class BaseConfig:
 
     DEBUG = True
     TESTING = False
-    SECRET_KEY = os.environ.get(
-        "SECRET_KEY", "df0331cefc6c2b9a5d0208a726a5d1c0fd37324feba25506"
-    )
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'df0331cefc6c2b9a5d0208a726a5d1c0fd37324feba25506')
 
 
 class DevelopmentConfig(BaseConfig):
@@ -28,35 +27,29 @@ class DevelopmentConfig(BaseConfig):
 
     DEBUG = True
     TESTING = False
-    SECRET_KEY = os.environ.get(
-        "SECRET_KEY", "df0331cefc6c2b9a5d0208a726a5d1c0fd37324feba25506"
-    )
-    JWT_SECRET_KEY = "super-secret-key"
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(
-        hours=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", "24"))
-    )
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(
-        days=int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES", "7"))
-    )
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'df0331cefc6c2b9a5d0208a726a5d1c0fd37324feba25506')
+    JWT_SECRET_KEY = 'super-secret-key'
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', '24')))
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', '7')))
 
 
 class TestingConfig(BaseConfig):
     """Testing configuration."""
 
     TESTING = True
-    SECRET_KEY = os.environ.get("SECRET_KEY", "secret-key")
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'secret-key')
 
 
 class ProductionConfig(BaseConfig):
     """Production configuration."""
 
     TESTING = False
-    SECRET_KEY = os.environ.get("SECRET_KEY", "secret-key")
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'secret-key')
 
 
 Config = {
-    "development": DevelopmentConfig,
-    "test": TestingConfig,
-    "production": ProductionConfig,
-    "staging": ProductionConfig,
+    'development': DevelopmentConfig,
+    'test': TestingConfig,
+    'production': ProductionConfig,
+    'staging': ProductionConfig,
 }

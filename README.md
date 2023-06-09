@@ -176,7 +176,7 @@ def find_channel(channel_id: str) -> Channel:
 def post_data(data: dict[str, int|str], url: str) -> dict[str, str]:
     admin_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODU1MjAxOTcsImlhdCI6MTY4NDkxNTM5Nywic3ViIjoyfQ.hne-aXvET8nSwzK1EVtC3-0hPZE_Sa4njp8ZH1u7rkk"
     headers = {"Authorization": f"Bearer {admin_token}"}
-    
+
     resp = requests.post(url, json=data, headers=headers)
     return resp
 
@@ -189,7 +189,7 @@ def load_channels(file: str) -> list[str]:
             for data in channel_list:
                 channel_ids.append(list(data.values())[0])
     return channel_ids
-    
+
 def create_channels(file: str) -> None:
     """Create the channels."""
     channel_ids = load_channels(file)
@@ -207,7 +207,7 @@ def create_channels(file: str) -> None:
 ```
 Call the ```create_channels``` function with a path to the ```kenyan_channels.json``` file. This will adfd the channels to the database. Make sure to replace the admin token.
 
-#### Creating a User 
+#### Creating a User
 
 To use the API, you will need an activated user account. This involves:
 
@@ -229,7 +229,7 @@ To list the channels added, you need to authorize your requests.
 
 ## Deployment
 
- - The application is containerized and deployed using an AWS EC2 instance. 
+ - The application is containerized and deployed using an AWS EC2 instance.
  - It uses the SQLite database.
  - Uses AWS Route53 to route internet traffic to the application.
  - It uses gunicorn with traefik.
@@ -245,4 +245,14 @@ To contribute, chack out the [contribution guideline](CONTRIBUTING.md).
 
 The API uses an [MIT License](LICENSE)
 
-## Get in Touch
+## Developer
+
+Lyle Okoth – [@lylethedesigner](https://twitter.com/lylethedesigner) on twitter
+
+[lyle okoth](https://medium.com/@lyle-okoth) on medium
+
+My email is lyceokoth@gmail.com
+
+Here is my [GitHub Profile](https://github.com/twyle/)
+
+You can also find me on [Linkedin](https://www.linkedin.com/in/lyle-okoth/)

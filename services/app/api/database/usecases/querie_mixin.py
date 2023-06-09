@@ -1,17 +1,24 @@
+from typing import Any
+
 from .queries.filters import (
-    GreaterThanFilter, LessThanFilter, InFilter, NotInFilter, GreaterThanEqualToFilter,
-    LessThanEqualToFilter, LessThanGreaterThanFilter, BetweenFilter, EqualFilter
+    BetweenFilter,
+    EqualFilter,
+    GreaterThanEqualToFilter,
+    GreaterThanFilter,
+    InFilter,
+    LessThanEqualToFilter,
+    LessThanFilter,
+    LessThanGreaterThanFilter,
+    NotInFilter,
 )
+from .queries.limiter import FieldLimiter, LimitLimiter, OffsetLimiter, SortLimiter
 from .queries.query_builder import QueryBuilder
 from .queries.query_generator import QueryGenerator
-from typing import Any
-from .queries.limiter import (
-    LimitLimiter, OffsetLimiter, FieldLimiter, SortLimiter
-)
 from .queries.query_limiters import QueryLimiters
 
-class QueryMixin:       
-    @staticmethod    
+
+class QueryMixin:
+    @staticmethod
     def generate_query(data: dict[str, dict[str, Any]]):
         query = """SELECT * FROM playlists"""
         filters = QueryMixin.generate_filters()
@@ -22,7 +29,7 @@ class QueryMixin:
         generated_query = query_generator(data)
         print(generated_query)
         return generated_query
-    
+
     @staticmethod
     def generate_filters():
         return [
@@ -34,14 +41,9 @@ class QueryMixin:
             BetweenFilter(),
             InFilter(),
             NotInFilter(),
-            EqualFilter()
+            EqualFilter(),
         ]
-        
+
     @staticmethod
     def generate_limiters():
-        return [
-            SortLimiter(),
-            LimitLimiter(),
-            OffsetLimiter(),
-            FieldLimiter()
-        ]
+        return [SortLimiter(), LimitLimiter(), OffsetLimiter(), FieldLimiter()]

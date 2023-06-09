@@ -1,6 +1,7 @@
-from ..extensions.extensions import swagger, bcrypt, jwt
 from flasgger import LazyJSONEncoder
 from flask import Flask
+
+from ..extensions.extensions import bcrypt, jwt, swagger
 
 
 def register_extensions(app: Flask) -> None:

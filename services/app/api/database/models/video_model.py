@@ -1,7 +1,9 @@
+import datetime as dt
 from dataclasses import dataclass
 from typing import Optional
-import datetime as dt
+
 from .resource_saver_mixins import ResourseSaverMixin
+
 
 @dataclass
 class Video(ResourseSaverMixin):
@@ -17,4 +19,3 @@ class Video(ResourseSaverMixin):
     comments_count: int
     published_at: dt.datetime
     id: Optional[int] = None
-    

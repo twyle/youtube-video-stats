@@ -1,11 +1,16 @@
-from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.response_builders.create_response import ResponseBuilder
+from flask import Blueprint, request
+
 from ...controllers.controllers.playlist_controller_factory import (
-    AddPlaylistControllerFactory, GetPlaylistControllerFactory, UpdatePlaylistControllerFactory, 
-    DeletePlaylistControllerFactory, GetPlaylistsControllerFactory, AddManyPlaylistsControllerFactory,
-    QueryPlaylistsControllerFactory
+    AddManyPlaylistsControllerFactory,
+    AddPlaylistControllerFactory,
+    DeletePlaylistControllerFactory,
+    GetPlaylistControllerFactory,
+    GetPlaylistsControllerFactory,
+    QueryPlaylistsControllerFactory,
+    UpdatePlaylistControllerFactory,
 )
+from ...controllers.response_builders.create_response import ResponseBuilder
 from ..flow import flow
 
 playlists = Blueprint('playlists', __name__)
@@ -16,6 +21,7 @@ playlists = Blueprint('playlists', __name__)
 def add():
     controller = AddPlaylistControllerFactory()
     return flow(controller)
+
 
 @swag_from('./docs/update.yml', endpoint='playlists.update', methods=['PUT'])
 @playlists.route('/playlist', methods=['PUT'])
@@ -48,7 +54,7 @@ def add_many():
 
 @swag_from('./docs/playlists.yml', endpoint='playlists.list_all_playlists', methods=['GET'])
 @playlists.route('/', methods=['GET'])
-def list_all_playlists(): 
+def list_all_playlists():
     controller = GetPlaylistsControllerFactory()
     return flow(controller)
 

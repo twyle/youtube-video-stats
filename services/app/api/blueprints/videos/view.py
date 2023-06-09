@@ -1,15 +1,19 @@
-from flask import Blueprint, request
 from flasgger import swag_from
-from ...controllers.response_builders.create_response import ResponseBuilder
-from ...controllers.controllers.video_controller_factory import (
-    AddVideoControllerFactory, GetVideoControllerFactory, UpdateVideoControllerFactory, 
-    DeleteVideoControllerFactory, GetVideosControllerFactory, AddManyVideosControllerFactory,
-    QueryVideosControllerFactory
-)
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+
+from ...controllers.controllers.video_controller_factory import (
+    AddManyVideosControllerFactory,
+    AddVideoControllerFactory,
+    DeleteVideoControllerFactory,
+    GetVideoControllerFactory,
+    GetVideosControllerFactory,
+    QueryVideosControllerFactory,
+    UpdateVideoControllerFactory,
+)
+from ...controllers.response_builders.create_response import ResponseBuilder
 from ..decorators import admin_token_required
 from ..flow import flow
-
 
 videos = Blueprint('videos', __name__)
 

@@ -1,5 +1,6 @@
-from contextlib import contextmanager
 import sqlite3
+from contextlib import contextmanager
+
 
 @contextmanager
 def create_sqlite_database_connection():
