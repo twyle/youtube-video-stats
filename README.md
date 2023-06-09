@@ -235,6 +235,8 @@ To list the channels added, you need to authorize your requests.
  - It uses gunicorn with traefik.
  - The application is auto-deployed to AWS once the production checks pass.
 
+ To try out the API, head over to the [YouTube Stats API](https://youtube-stats.oryks-sytem.com/apidocs/).
+
 ## How to Contribute
 
 To contribute, chack out the [contribution guideline](CONTRIBUTING.md).
