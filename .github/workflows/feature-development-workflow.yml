@@ -79,6 +79,6 @@ jobs:
 
     - name: Test application
       run: |
-        python manage.py run &
+        python services/app/manage.py run &
         sleep 10
         curl http://127.0.0.1:5000/ | grep "stats API"
