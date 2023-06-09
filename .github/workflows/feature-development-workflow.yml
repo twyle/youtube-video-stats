@@ -6,19 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
-
   Build:
-
     runs-on: ubuntu-latest
-
     environment:
       name: Test
-
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
-
     steps:
+
     - name: Check out code
       uses: actions/checkout@v2
 
@@ -52,18 +48,13 @@ jobs:
         echo SECRET_KEY=${{secrets.SECRET_KEY}} >> .env
 
   Test-Local:
-
     runs-on: ubuntu-latest
-
     environment:
       name: Development
-
     needs: [Build]
-
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
-
     steps:
     - name: Check out code
       uses: actions/checkout@v2
