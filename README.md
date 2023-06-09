@@ -11,6 +11,9 @@
   <a href='https://youtube-video-stats.readthedocs.io/en/latest/?badge=latest'>
     <img src='https://readthedocs.org/projects/youtube-video-stats/badge/?version=latest' alt='Documentation Status' />
 </a>
+  <a href='https://youtube-video-stats.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/youtube-video-stats/badge/?version=latest' alt='Documentation Status' />
+</a>
   <img title="Bandit badge" alt="Bandit badge" src="https://img.shields.io/badge/security-bandit-yellow.svg" />
   <img title="Bandit badge" alt="Bandit badge" src="https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336" />
   <img title="Bandit badge" alt="Bandit badge" src="https://img.shields.io/badge/Made%20with- Python-1f425f.svg" />
@@ -45,6 +48,10 @@ The API provides various endpoints for various uses:
 <p align=center>
   <img src="assets/videos/video.gif" />
 </p>
+
+### API Documentation
+
+To learn more about this API, including the routes and authentication, read the [official documentation](https://youtube-video-stats.readthedocs.io/en/latest/).
 
 ### Security
 
@@ -222,6 +229,18 @@ To list the channels added, you need to authorize your requests.
 
 ## Deployment
 
+ - The application is containerized and deployed using an AWS EC2 instance. 
+ - It uses the SQLite database.
+ - Uses AWS Route53 to route internet traffic to the application.
+ - It uses gunicorn with traefik.
+ - The application is auto-deployed to AWS once the production checks pass.
+
 ## How to Contribute
+
+To contribute, chack out the [contribution guideline](CONTRIBUTING.md).
+
+## License
+
+The API uses an [MIT License](LICENSE)
 
 ## Get in Touch
