@@ -123,7 +123,6 @@ class AddManyVideoUseCase(UseCase):
                 video = Video(
                     video_id=video_data['video_id'],
                     video_title=video_data['video_title'],
-                    channel_title=video_data['channel_title'],
                     video_description=video_data['video_description'],
                     video_thumbnail=video_data['video_thumbnail'],
                     video_duration=video_data['video_duration'],

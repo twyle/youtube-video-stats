@@ -3,26 +3,31 @@ import os
 from typing import Iterator, Optional
 
 import requests
+from dotenv import load_dotenv
+from requests import Response
 from youtube import YouTube
 from youtube.models.comment_model import Comment, CommentAuthor
 from youtube.models.comment_thread_model import CommentThread, VideoComment, VideoCommentThread
+from youtube.models.video_model import Video as YouTubeVideo
 
 from ..database.models.channel_model import Channel
 from ..database.models.playlist_item_model import PlaylistItemModel
 from ..database.models.playlist_model import Playlist
 from ..database.models.video_model import Video
 
-client_secrets_file = '/home/lyle/Downloads/python_learning_site.json'
+load_dotenv()
+
+client_secrets_file = os.environ['SECRET_FILE']
 youtube = YouTube(client_secrets_file)
 
 
-def get_video_by_id(video_id: str) -> Video:
+def get_video_by_id(video_id: str) -> YouTubeVideo:
     """ "Get a video by it's id."""
     video = youtube.find_video_by_id(video_id)
     return video
 
 
-def get_channel_id_title(video: Video) -> dict[str, str]:
+def get_channel_id_title(video: YouTubeVideo) -> dict[str, str]:
     """Get channel id and title from video."""
     data = {}
     if video:
@@ -55,10 +60,10 @@ def find_channel(channel_id: str) -> Channel:
 
 # flake8: noqa: E501
 def post_data(data: dict[str, int | str], url: str) -> dict[str, str]:
-    admin_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODU1MjAxOTcsImlhdCI6MTY4NDkxNTM5Nywic3ViIjoyfQ.hne-aXvET8nSwzK1EVtC3-0hPZE_Sa4njp8ZH1u7rkk'
+    admin_token = os.environ['ADMIN_TOKEN']
     headers = {'Authorization': f'Bearer {admin_token}'}
 
-    resp = requests.post(url, json=data, headers=headers)
+    resp: Response = requests.post(url, json=data, headers=headers)
     return resp
 
 
@@ -116,11 +121,14 @@ def add_many_channels(channel_ids: list[str]) -> None:
 
 def add_many_videos(video_ids: list[str]) -> None:
     """Add many videos."""
-    videos: list[Video] = youtube.find_video_by_id(video_ids)
+    videos: list[YouTubeVideo] = youtube.find_video_by_id(video_ids)
     data = {'videos': [video.to_dict() for video in videos]}
     # print(data)
     url = 'http://localhost:5000/api/v1/videos/'
     resp = post_data(url=url, data=data)
+    # print(resp.text)
+    # import sys
+    # sys.exit(1)
     print(resp.json())
 
 
@@ -141,7 +149,7 @@ def add_many_playlist_items(playlist_items: PlaylistItemModel) -> None:
     print(resp.json())
 
 
-def get_video_comments(video_id: str) -> list[dict[str, int | str]]:
+def get_video_comments(video_id: str) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
     """Get a videos comments."""
     search_iterator: Iterator = youtube.find_video_comments(video_id, max_results=5)
     video_comment_threads: list[VideoCommentThread] = list(next(search_iterator))
@@ -153,21 +161,7 @@ def get_video_comments(video_id: str) -> list[dict[str, int | str]]:
         authors.append(author.to_dict())
         video_comment: dict[str, str] = comment.to_dict()
         comments.append(video_comment)
-        # video_comment = {
-        #     'video_id': video_comment_thread.video_id,
-        #     'author_display_name': author.author_display_name,
-        #     'author_profile_image_url': author.author_profile_image_url,
-        #     'author_channel_url': author.author_channel_url,
-        #     'author_channel_id': author.author_channel_id,
-        #     'comment_id': comment.comment_id,
-        #     'comment_text': comment.text_display,
-        #     'like_count': comment.like_count,
-        #     'published_at': comment.published_at,
-        #     'updated_at': comment.updated_at,
-        #     'parent_id': comment.parent_id
-        # }
-    print(authors)
-    print(comments)
+    return authors, comments
 
 
 def add_palylist_items(playlist: Playlist) -> None:

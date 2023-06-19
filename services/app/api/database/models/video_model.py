@@ -10,7 +10,6 @@ class Video(ResourseSaverMixin):
     video_id: str
     video_title: str
     channel_id: str
-    channel_title: str
     video_description: str
     video_thumbnail: str
     video_duration: str
