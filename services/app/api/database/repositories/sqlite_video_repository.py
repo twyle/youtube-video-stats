@@ -28,14 +28,17 @@ class SQLiteVideoRepository(BaseRepository[Video]):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             video_id TEXT NOT NULL UNIQUE,
             video_title TEXT NOT NULL,
-            channel_title TEXT NOT NULL UNIQUE,
+            channel_id TEXT NOT NULL,
             video_description TEXT,
             video_thumbnail TEXT,
             video_duration TEXT,
             views_count INTEGER ,
             likes_count INTEGER,
             comments_count INTEGER,
-            published_at TEXT
+            published_at TEXT,
+            FOREIGN KEY (channel_id) REFERENCES channels (channel_id)
+            ON UPDATE cascade
+            ON DELETE cascade
         )
         """
         )
@@ -46,14 +49,14 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         try:
             cursor.execute(
                 """
-            INSERT INTO videos (video_id, video_title, channel_title, video_description,
+            INSERT INTO videos (video_id, video_title, channel_id, video_description,
             video_thumbnail, video_duration, views_count, likes_count, comments_count, published_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     video.video_id,
                     video.video_title,
-                    video.channel_title,
+                    video.channel_id,
                     video.video_description,
                     video.video_thumbnail,
                     video.video_duration,
@@ -73,7 +76,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         cursor = self.connection.cursor()
         cursor.execute(
             """
-        SELECT id, video_id, video_title, channel_title, video_description, video_thumbnail, video_duration,
+        SELECT id, video_id, video_title, channel_id, video_description, video_thumbnail, video_duration,
             views_count, likes_count, comments_count, published_at FROM videos WHERE id=?
         """,
             ((video_id,)),
@@ -84,7 +87,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                 id=row[0],
                 video_id=row[1],
                 video_title=row[2],
-                channel_title=row[3],
+                channel_id=row[3],
                 video_description=row[4],
                 video_thumbnail=row[5],
                 video_duration=row[6],
@@ -100,14 +103,14 @@ class SQLiteVideoRepository(BaseRepository[Video]):
         cursor = self.connection.cursor()
         cursor.execute(
             """
-        UPDATE videos SET video_id=?, video_title=?, channel_title=?, video_description=?,
+        UPDATE videos SET video_id=?, video_title=?, channel_id=?, video_description=?,
         video_thumbnail=?, video_duration=?, views_count=?, likes_count=?, comments_count=?,
         published_at=? WHERE id=?
         """,
             (
                 video.video_id,
                 video.video_title,
-                video.channel_title,
+                video.channel_id,
                 video.video_description,
                 video.video_thumbnail,
                 video.video_duration,
@@ -144,7 +147,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                     id=row[0],
                     video_id=row[1],
                     video_title=row[2],
-                    channel_title=row[3],
+                    channel_id=row[3],
                     video_description=row[4],
                     video_thumbnail=row[5],
                     video_duration=row[6],
