@@ -8,8 +8,8 @@ Welcome to Kenyan Influencer's YouTube Stats's documentation!
 =============================================================
 
 This is an Application Programming Interface (API) for getting information
-on Videos Posted by Kenyan Social Media Influencers on YouTube. The data 
-provided includes channel details such as title, number of subscribers, 
+on Videos Posted by Kenyan Social Media Influencers on YouTube. The data
+provided includes channel details such as title, number of subscribers,
 playlist including the videos in the playlists, video details such as comments, likes,
 views, when the video was published as well as the video duration..
 
@@ -44,18 +44,39 @@ API Routes
    :caption: API Routes
    :hidden:
 
-   api/v1/auth
-   api/v1/channels
-   api/v1/videos
+   api/v1/auth/auth
+   api/v1/channels/channels
+   api/v1/videos/videos
 
-:doc:`api/v1/auth`
-    Leanr how the authentication route works.
+:doc:`api/v1/auth/auth`
+    Learn how the authentication route works.
 
-:doc:`api/v1/channels`
+:doc:`/api/v1/channels/channels`
     Learn how to get channel data using the channel route.
 
-:doc:`api/v1/videos`
-    Leanr how to get video data using the videos route..
+:doc:`/api/v1/videos/videos`
+    Learn how to get video data using the videos route..
+
+.. toctree::
+   :caption: Auth Routes
+   :hidden:
+
+   api/v1/auth/register
+   api/v1/auth/activate
+   api/v1/auth/login
+   api/v1/auth/refresh
+
+:doc:`api/v1/auth/register`
+    Learn how the registration route works.
+
+:doc:`api/v1/auth/activate`
+    Learn how the account activation route works.
+
+:doc:`api/v1/auth/login`
+    Learn how the login route works.
+
+:doc:`api/v1/auth/refresh`
+    Learn how the token refresh route works.
 
 Indices and tables
 ==================
