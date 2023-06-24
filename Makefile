@@ -1,3 +1,9 @@
+install-prod:
+	@pip install -r services/app/requirements.txt
+
+install-dev:
+	pip install -r services/app/requirements-dev.txt
+
 gunicorn:
 	@cd services/app && gunicorn -b 0.0.0.0:5000 manage:app
 

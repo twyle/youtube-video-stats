@@ -1,4 +1,4 @@
-.. _intro-tutorial:
+.. _channel:
 
 ===============
 api/v1/channels
