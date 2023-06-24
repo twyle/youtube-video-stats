@@ -19,6 +19,10 @@ Please do:
 * Open a pull request to fix documentation about a command.
 * Open a pull request for any issue labelled [`help wanted`][hw] or [`good first issue`][gfi].
 
+- To report a bug, check the [bug template](.github/issues/bug.md)
+
+- To ask for a feature,check the [feature template](.github/issues/feature.md)
+
 Please avoid:
 
 * Opening pull requests for issues marked `needs-design`, `needs-investigation`, or `blocked`.
