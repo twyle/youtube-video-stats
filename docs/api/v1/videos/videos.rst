@@ -1,4 +1,4 @@
-.. _intro-tutorial:
+.. _videos:
 
 =============
 api/v1/videos
