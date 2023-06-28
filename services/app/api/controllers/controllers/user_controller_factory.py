@@ -23,8 +23,8 @@ from .base_controller_factory import BaseControllerFactory
 class CreateUserControllerFactory(BaseControllerFactory):
     def get_request_data_validator(self) -> DataValidatorList:
         validators = [
-            NameValidator(attr='first_name'),
-            NameValidator(attr='last_name'),
+            NameValidator(attr="first_name"),
+            NameValidator(attr="last_name"),
             EmailValidator(),
             PasswordValidator(),
             PasswordMatchValidator(),
@@ -99,8 +99,8 @@ class LoginUserControllerFactory(BaseControllerFactory):
 class CreateAdminControllerFactory(BaseControllerFactory):
     def get_request_data_validator(self) -> DataValidatorList:
         validators = [
-            NameValidator(attr='first_name'),
-            NameValidator(attr='last_name'),
+            NameValidator(attr="first_name"),
+            NameValidator(attr="last_name"),
             EmailValidator(),
             PasswordValidator(),
             PasswordMatchValidator(),

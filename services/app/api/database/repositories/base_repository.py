@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class BaseRepository(ABC, Generic[T]):
-    'A base class for repositories.'
+    "A base class for repositories."
 
     @abstractmethod
     def add(self, item: T) -> T:

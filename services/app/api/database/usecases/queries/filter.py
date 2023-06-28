@@ -5,15 +5,15 @@ from typing import Any, Optional
 class Filter(ABC):
     def __init__(self, next_filter: Optional[Any] = None) -> None:
         self.__operator_map = {
-            'gt': '>',
-            'gte': '>=',
-            'lt': '<',
-            'eq': '=',
-            'lte': '<=',
-            'in': 'IN',
-            'not in': 'NOT IN',
-            'between': '',
-            'not between': '',
+            "gt": ">",
+            "gte": ">=",
+            "lt": "<",
+            "eq": "=",
+            "lte": "<=",
+            "in": "IN",
+            "not in": "NOT IN",
+            "between": "",
+            "not between": "",
         }
         self.__next_filter = next_filter
 

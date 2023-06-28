@@ -55,7 +55,7 @@ class SQLiteCommentAuthorRepository(BaseRepository[CommentAuthor]):
                 ),
             )
         except IntegrityError as e:
-            raise ResourceExistsException('The comment_author already exists.') from e
+            raise ResourceExistsException("The comment_author already exists.") from e
         else:
             comment_author.author_id = cursor.lastrowid
             return comment_author
@@ -78,7 +78,7 @@ class SQLiteCommentAuthorRepository(BaseRepository[CommentAuthor]):
                 author_channel_url=row[3],
                 author_channel_id=row[4],
             )
-        raise ResourceNotExistException('The given comment author does not exist.')
+        raise ResourceNotExistException("The given comment author does not exist.")
 
     def get_by_email(self, author_display_name: str) -> CommentAuthor:
         cursor = self.connection.cursor()
@@ -98,7 +98,7 @@ class SQLiteCommentAuthorRepository(BaseRepository[CommentAuthor]):
                 author_channel_url=row[3],
                 author_channel_id=row[4],
             )
-        raise ResourceNotExistException('The given comment author does not exist.')
+        raise ResourceNotExistException("The given comment author does not exist.")
 
     def update(self, comment_author: CommentAuthor) -> CommentAuthor:
         cursor = self.connection.cursor()

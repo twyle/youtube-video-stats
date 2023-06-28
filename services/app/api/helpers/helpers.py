@@ -1,11 +1,10 @@
-import os
-
+"""This script contains helper methods for use with the application."""
 from flask import Flask
 
 from ..config.config import Config
 
 
-def set_configuration(app: Flask) -> None:
+def set_configuration(app: Flask, flask_env: str = "development") -> None:
     """Set the application configuration.
 
     The application configuration will depend on the
@@ -14,12 +13,6 @@ def set_configuration(app: Flask) -> None:
     Parameters
     ----------
     app: flask.Flask
-        A flask app instance
-
-    Returns
-    -------
-    bool:
-        Whether the config was set up successfully.
+        A flask app instance.
     """
-    config_name = os.environ.get('FLASK_ENV')
-    app.config.from_object(Config[config_name])
+    app.config.from_object(Config[flask_env])
