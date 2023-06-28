@@ -38,7 +38,7 @@ class QueryGenerator(BaseQueryGenerator):
         return self.__limit_query(query_parameters)
 
     def __generate_query(self, query_parameters: dict[str, dict[str, Any]]) -> str:
-        generated_query = self.query_builder(self.query, query_parameters['query'])
+        generated_query = self.query_builder(self.query, query_parameters["query"])
         return generated_query[0]
 
     def __limit_query(self, query_parameters: dict[str, dict[str, Any]]) -> str:

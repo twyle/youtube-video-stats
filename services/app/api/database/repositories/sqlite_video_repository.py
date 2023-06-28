@@ -67,7 +67,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                 ),
             )
         except IntegrityError as e:
-            raise ResourceExistsException('The video already exists.') from e
+            raise ResourceExistsException("The video already exists.") from e
         else:
             video.id = cursor.lastrowid
             return video
@@ -97,7 +97,7 @@ class SQLiteVideoRepository(BaseRepository[Video]):
                 published_at=row[10],
             )
         else:
-            raise ResourceNotExistException('The video was not found.')
+            raise ResourceNotExistException("The video was not found.")
 
     def update(self, video: Video) -> Video:
         cursor = self.connection.cursor()
@@ -130,8 +130,8 @@ class SQLiteVideoRepository(BaseRepository[Video]):
     def list_all(
         self,
         limit: Optional[int] = 2,
-        sort_order: Optional[str] = 'ASC',
-        sort_field: Optional[str] = 'id',
+        sort_order: Optional[str] = "ASC",
+        sort_field: Optional[str] = "id",
         offset: Optional[int] = 0,
     ) -> list[Video]:
         cursor = self.connection.cursor()

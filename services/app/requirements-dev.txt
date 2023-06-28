@@ -1,5 +1,9 @@
-sphinx
-recommonmark
-sphinx_rtd_theme
+black==23.3.0
 faker
+flake8==6.0.0
+isort==5.12.0
+recommonmark
 requests
+sphinx
+sphinx_rtd_theme
+pydocstyle==6.3.0

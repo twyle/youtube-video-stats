@@ -5,7 +5,7 @@ from ..repositories.base_repository import BaseRepository
 from ..repositories.unit_of_work import BaseUnitfWork
 from ..usecases.use_case import UseCase
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class RequestHandlerFactory(ABC):

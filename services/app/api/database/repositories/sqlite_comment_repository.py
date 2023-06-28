@@ -61,7 +61,7 @@ class SQLiteCommentRepository(BaseRepository[Comment]):
                 ),
             )
         except IntegrityError as e:
-            raise ResourceExistsException('The comment already exists.') from e
+            raise ResourceExistsException("The comment already exists.") from e
         else:
             comment.id = cursor.lastrowid
             return comment
@@ -88,7 +88,7 @@ class SQLiteCommentRepository(BaseRepository[Comment]):
                 updated_at=row[7],
             )
         else:
-            raise ResourceNotExistException('The Comment was not found.')
+            raise ResourceNotExistException("The Comment was not found.")
 
     def update(self, comment: Comment) -> Comment:
         cursor = self.connection.cursor()
@@ -117,8 +117,8 @@ class SQLiteCommentRepository(BaseRepository[Comment]):
     def list_all(
         self,
         limit: Optional[int] = 2,
-        sort_order: Optional[str] = 'ASC',
-        sort_field: Optional[str] = 'id',
+        sort_order: Optional[str] = "ASC",
+        sort_field: Optional[str] = "id",
         offset: Optional[int] = 0,
     ) -> list[Comment]:
         cursor = self.connection.cursor()

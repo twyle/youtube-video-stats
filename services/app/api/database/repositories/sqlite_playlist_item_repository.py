@@ -73,7 +73,7 @@ class SQLitePlaylistItemRepository(BaseRepository[PlaylistItemModel]):
             )
         except IntegrityError as e:
             print(e)
-            raise ResourceExistsException('The Playlist already exists.') from e
+            raise ResourceExistsException("The Playlist already exists.") from e
         else:
             playlist_item.id = cursor.lastrowid
             return playlist_item
@@ -101,7 +101,7 @@ class SQLitePlaylistItemRepository(BaseRepository[PlaylistItemModel]):
                 date_added=row[8],
             )
         else:
-            raise ResourceNotExistException('The playlist was not found.')
+            raise ResourceNotExistException("The playlist was not found.")
 
     def update(self, playlist_item: PlaylistItemModel) -> PlaylistItemModel:
         cursor = self.connection.cursor()
@@ -131,8 +131,8 @@ class SQLitePlaylistItemRepository(BaseRepository[PlaylistItemModel]):
     def list_all(
         self,
         limit: Optional[int] = 2,
-        sort_order: Optional[str] = 'ASC',
-        sort_field: Optional[str] = 'id',
+        sort_order: Optional[str] = "ASC",
+        sort_field: Optional[str] = "id",
         offset: Optional[int] = 0,
     ) -> list[PlaylistItemModel]:
         cursor = self.connection.cursor()

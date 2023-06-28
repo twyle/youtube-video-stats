@@ -21,11 +21,11 @@ class Controller(BaseController):
         try:
             api_request_data = self.handle_request(request_builder, data_validators, request_object, request_handler)
         except ResourceExistsException as e:
-            return {'Error': str(e)}, HTTPStatus.CONFLICT
+            return {"Error": str(e)}, HTTPStatus.CONFLICT
         except ResourceNotExistException as e:
-            return {'Error': str(e)}, HTTPStatus.NOT_FOUND
+            return {"Error": str(e)}, HTTPStatus.NOT_FOUND
         except ValueError as e:
-            return {'Error': str(e)}, 404
+            return {"Error": str(e)}, 404
         # except KeyError as e:
         #     return {'Error': f'The key {str(e)} is not allowed for this route.'}, HTTPStatus.NOT_FOUND
         else:

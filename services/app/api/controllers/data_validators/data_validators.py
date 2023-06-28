@@ -4,7 +4,7 @@ from .validator import DataValidator
 
 
 class NameValidator(DataValidator):
-    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = '') -> None:
+    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = "") -> None:
         self.__next_validator = next_validator
         self.__attr = attr
 
@@ -23,11 +23,11 @@ class NameValidator(DataValidator):
         self.__next_validator = next_validator
 
     def validate(self, data: dict) -> dict:
-        print(f'Validating {self.__attr} name')
+        print(f"Validating {self.__attr} name")
 
 
 class EmailValidator(DataValidator):
-    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = '') -> None:
+    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = "") -> None:
         self.__next_validator = next_validator
         self.__attr = attr
 
@@ -46,11 +46,11 @@ class EmailValidator(DataValidator):
         self.__next_validator = next_validator
 
     def validate(self, data: dict) -> dict:
-        print('Validating email')
+        print("Validating email")
 
 
 class PasswordValidator(DataValidator):
-    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = '') -> None:
+    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = "") -> None:
         self.__next_validator = next_validator
         self.__attr = attr
 
@@ -69,11 +69,11 @@ class PasswordValidator(DataValidator):
         self.__next_validator = next_validator
 
     def validate(self, data: dict) -> dict:
-        print('Validating password')
+        print("Validating password")
 
 
 class PasswordMatchValidator(DataValidator):
-    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = '') -> None:
+    def __init__(self, next_validator: Optional[DataValidator] = None, attr: Optional[str] = "") -> None:
         self.__next_validator = next_validator
         self.__attr = attr
 
@@ -92,5 +92,5 @@ class PasswordMatchValidator(DataValidator):
         self.__next_validator = next_validator
 
     def validate(self, data: dict) -> dict:
-        print('Validating that passwords match')
+        print("Validating that passwords match")
         # raise ValueError('The passwords do not match.')

@@ -62,7 +62,7 @@ class SQLiteChannelRepository(BaseRepository[Channel]):
                 ),
             )
         except IntegrityError as e:
-            raise ResourceExistsException('The Channel already exists.') from e
+            raise ResourceExistsException("The Channel already exists.") from e
         else:
             channel.id = cursor.lastrowid
             return channel
@@ -92,7 +92,7 @@ class SQLiteChannelRepository(BaseRepository[Channel]):
                 published_at=row[9],
             )
         else:
-            raise ResourceNotExistException('The Channel was not found.')
+            raise ResourceNotExistException("The Channel was not found.")
 
     def update(self, channel: Channel) -> Channel:
         cursor = self.connection.cursor()
@@ -124,8 +124,8 @@ class SQLiteChannelRepository(BaseRepository[Channel]):
     def list_all(
         self,
         limit: Optional[int] = 2,
-        sort_order: Optional[str] = 'ASC',
-        sort_field: Optional[str] = 'id',
+        sort_order: Optional[str] = "ASC",
+        sort_field: Optional[str] = "id",
         offset: Optional[int] = 0,
     ) -> list[Channel]:
         cursor = self.connection.cursor()

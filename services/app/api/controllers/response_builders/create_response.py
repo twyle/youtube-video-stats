@@ -41,7 +41,7 @@ class ResponseBuilder(ResponseBuilderBase):
             or not self.__request_object
             or not self.__controller
         ):
-            raise ValueError('All the dependencies must be provided before building the use case.')
+            raise ValueError("All the dependencies must be provided before building the use case.")
         return self.__controller(
             self.__request_builder,
             self.__data_validators,

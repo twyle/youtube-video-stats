@@ -17,14 +17,14 @@ class CreateUserUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             user = User(
-                first_name=data['first_name'],
-                last_name=data['last_name'],
-                email_address=data['email_address'],
-                password=User.hash_password(data['password']),
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                email_address=data["email_address"],
+                password=User.hash_password(data["password"]),
             )
             uow.repository.add(user)
         activation_token = User.encode_auth_token(user.id)
-        data = {'user': dataclasses.asdict(user), 'activation_token': activation_token}
+        data = {"user": dataclasses.asdict(user), "activation_token": activation_token}
         return data
 
 
@@ -34,7 +34,7 @@ class GetUserUseCase(UseCase):
 
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_id = data['user_id']
+            user_id = data["user_id"]
             user = uow.repository.get_by_id(user_id)
         return dataclasses.asdict(user)
 
@@ -45,7 +45,7 @@ class DeleteUserUseCase(UseCase):
 
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_id = data['user_id']
+            user_id = data["user_id"]
             user = uow.repository.get_by_id(user_id)
             uow.repository.delete(user_id)
         return dataclasses.asdict(user)
@@ -57,14 +57,14 @@ class UpdateUserUseCase(UseCase):
 
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_id = data['user_id']
+            user_id = data["user_id"]
             user = uow.repository.get_by_id(user_id)
-            if data.get('first_name'):
-                user.first_name = data.get('first_name')
-            if data.get('last_name'):
-                user.last_name = data.get('last_name')
-            if data.get('email_address'):
-                user.email_address = data.get('email_address')
+            if data.get("first_name"):
+                user.first_name = data.get("first_name")
+            if data.get("last_name"):
+                user.last_name = data.get("last_name")
+            if data.get("email_address"):
+                user.email_address = data.get("email_address")
             uow.repository.update(user)
         return dataclasses.asdict(user)
 
@@ -86,10 +86,10 @@ class ActivateUserUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         exct = None
         with self.unit_of_work as uow:
-            user_id = data['user_id']
+            user_id = data["user_id"]
             user = uow.repository.get_by_id(user_id)
             try:
-                user_identity = User.decode_auth_token(data['activation_token'])
+                user_identity = User.decode_auth_token(data["activation_token"])
             except (ExpiredSignatureError, InvalidTokenError) as e:
                 uow.repository.delete(user_id)
                 exct = e
@@ -100,7 +100,7 @@ class ActivateUserUseCase(UseCase):
                 uow.repository.update(user)
         if exct:
             raise exct
-        return {'Success': 'Account Activated', 'data': dataclasses.asdict(user)}
+        return {"Success": "Account Activated", "data": dataclasses.asdict(user)}
 
 
 class LoginUserUseCase(UseCase):
@@ -109,15 +109,15 @@ class LoginUserUseCase(UseCase):
 
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
-            user_email = data['email_address']
+            user_email = data["email_address"]
             user = uow.repository.get_by_email(user_email)
             if not user.account_activated:
-                raise ValueError('The user account has not been activated.')
-            if not user.check_password(data['password']):
-                raise ValueError('Invalid email address or password.')
+                raise ValueError("The user account has not been activated.")
+            if not user.check_password(data["password"]):
+                raise ValueError("Invalid email address or password.")
         access_token = create_access_token(identity=user.id)
         refresh_token = create_refresh_token(identity=user.id)
-        return {'access_token': access_token, 'refresh_token': refresh_token}
+        return {"access_token": access_token, "refresh_token": refresh_token}
 
 
 class CreateAdminUseCase(UseCase):
@@ -127,14 +127,14 @@ class CreateAdminUseCase(UseCase):
     def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         with self.unit_of_work as uow:
             user = User(
-                first_name=data['first_name'],
-                last_name=data['last_name'],
-                email_address=data['email_address'],
-                password=User.hash_password(data['password']),
-                role='admin',
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                email_address=data["email_address"],
+                password=User.hash_password(data["password"]),
+                role="admin",
                 account_activated=1,
             )
             uow.repository.add(user)
         activation_token = User.generate_admin_token(user.id)
-        data = {'admin': dataclasses.asdict(user), 'admin_token': activation_token}
+        data = {"admin": dataclasses.asdict(user), "admin_token": activation_token}
         return data

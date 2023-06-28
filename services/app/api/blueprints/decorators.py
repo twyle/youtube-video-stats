@@ -29,19 +29,19 @@ def admin_token_required(f):
     def decorator(*args, **kwargs):
         token = None
         # ensure the jwt-token is passed with the headers
-        if 'Authorization' in request.headers:
-            token = request.headers['Authorization'].split()[1]
+        if "Authorization" in request.headers:
+            token = request.headers["Authorization"].split()[1]
         if not token:  # throw error if no token provided
-            return make_response(jsonify({'message': 'A valid admin token is missing!'}), 401)
+            return make_response(jsonify({"message": "A valid admin token is missing!"}), 401)
         try:
             # decode the token to obtain user public_id
-            data = decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            user_data = {'user_id': data['sub']}
+            data = decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
+            user_data = {"user_id": data["sub"]}
             admin = get_user(user_data)
-            if not admin['role'] == 'admin':
-                return make_response(jsonify({'message': 'A valid admin token is missing!'}), 401)
+            if not admin["role"] == "admin":
+                return make_response(jsonify({"message": "A valid admin token is missing!"}), 401)
         except (ExpiredSignatureError, InvalidTokenError) as e:
-            return make_response(jsonify({'message': str(e)}), 401)
+            return make_response(jsonify({"message": str(e)}), 401)
         # Return the user information attached to the token
         return f(*args, **kwargs)
 

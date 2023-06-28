@@ -13,6 +13,6 @@ class Playlist(ResourseSaverMixin):
     playlist_title: str
     playlist_description: str
     playlist_thumbnail: str
-    privacy_status: Optional[str] = 'public'
+    privacy_status: Optional[str] = "public"
     videos_count: Optional[int] = 0
     id: Optional[int] = -1

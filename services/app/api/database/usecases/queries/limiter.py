@@ -28,8 +28,8 @@ class LimitLimiter(Limiter):
     def __call__(
         self, query: str, query_parameters: dict[str, dict[str, Any]]
     ) -> tuple[str, dict[str, dict[str, Any]]]:
-        limit = query_parameters.get('limit', 10)
-        updated_query = query + f' LIMIT {limit}'
+        limit = query_parameters.get("limit", 10)
+        updated_query = query + f" LIMIT {limit}"
         if self.next_limiter:
             return self.next_limiter(updated_query, query_parameters)
         return updated_query, query_parameters
@@ -42,8 +42,8 @@ class OffsetLimiter(Limiter):
     def __call__(
         self, query: str, query_parameters: dict[str, dict[str, Any]]
     ) -> tuple[str, dict[str, dict[str, Any]]]:
-        offset = query_parameters.get('offset', 0)
-        updated_query = query + f' OFFSET {offset}'
+        offset = query_parameters.get("offset", 0)
+        updated_query = query + f" OFFSET {offset}"
         if self.next_limiter:
             return self.next_limiter(updated_query, query_parameters)
         return updated_query, query_parameters
@@ -56,10 +56,10 @@ class FieldLimiter(Limiter):
     def __call__(
         self, query: str, query_parameters: dict[str, dict[str, Any]]
     ) -> tuple[str, dict[str, dict[str, Any]]]:
-        fields = '*'
-        if query_parameters.get('fields'):
-            fields = ', '.join(query_parameters.get('fields'))
-        updated_query = query.replace('*', fields)
+        fields = "*"
+        if query_parameters.get("fields"):
+            fields = ", ".join(query_parameters.get("fields"))
+        updated_query = query.replace("*", fields)
         if self.next_limiter:
             return self.next_limiter(updated_query, query_parameters)
         return updated_query, query_parameters
@@ -72,12 +72,12 @@ class SortLimiter(Limiter):
     def __call__(
         self, query: str, query_parameters: dict[str, dict[str, Any]]
     ) -> tuple[str, dict[str, dict[str, Any]]]:
-        field = 'id'
-        order = 'ASC'
-        if query_parameters.get('sort'):
-            field = query_parameters['sort']['field']
-            order = query_parameters['sort']['order']
-        updated_query = query + f' ORDER BY {field} {order}'
+        field = "id"
+        order = "ASC"
+        if query_parameters.get("sort"):
+            field = query_parameters["sort"]["field"]
+            order = query_parameters["sort"]["order"]
+        updated_query = query + f" ORDER BY {field} {order}"
         if self.next_limiter:
             return self.next_limiter(updated_query, query_parameters)
         return updated_query, query_parameters
