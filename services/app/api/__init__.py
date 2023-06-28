@@ -39,7 +39,7 @@ def create_app(flask_env: str = "development") -> Flask:
     @app.route("/", methods=["GET"])
     def health_check():
         """Check whether the application is up and running."""
-        return jsonify({"success": "Hello from the stats API."}), HTTPStatus
+        return jsonify({"success": "Hello from the stats API."}), HTTPStatus.OK
 
     app.shell_context_processor({"app": app})
 
