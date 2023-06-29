@@ -17,7 +17,7 @@ comment_authors = Blueprint("comment_authors", __name__)
 
 
 @comment_authors.route("/register", methods=["POST"])
-# @jwt_required()
+@admin_token_required
 @swag_from(
     "./docs/register.yml",
     endpoint="comment_authors.register_comment_author",
@@ -29,7 +29,7 @@ def register_comment_author():
 
 
 @comment_authors.route("/get", methods=["GET"])
-# @jwt_required()
+@jwt_required()
 @swag_from("./docs/get.yml", endpoint="comment_authors.get_comment_author", methods=["GET"])
 def get_comment_author():
     controller = GetCommentAuthorControllerFactory()
@@ -37,7 +37,7 @@ def get_comment_author():
 
 
 @comment_authors.route("/update", methods=["PUT"])
-# @jwt_required()
+@admin_token_required
 @swag_from(
     "./docs/update.yml",
     endpoint="comment_authors.update_comment_author",
@@ -49,7 +49,7 @@ def update_comment_author():
 
 
 @comment_authors.route("/delete", methods=["DELETE"])
-# @admin_token_required
+@admin_token_required
 @swag_from(
     "./docs/delete.yml",
     endpoint="comment_authors.delete_comment_author",
@@ -61,7 +61,7 @@ def delete_comment_author():
 
 
 @comment_authors.route("/", methods=["GET"])
-# @admin_token_required
+@jwt_required()
 @swag_from("./docs/users.yml", endpoint="comment_authors.list_all", methods=["GET"])
 def list_all():
     controller = ListCommentAuthorsControllerFactory()

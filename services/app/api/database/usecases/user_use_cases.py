@@ -118,23 +118,3 @@ class LoginUserUseCase(UseCase):
         access_token = create_access_token(identity=user.id)
         refresh_token = create_refresh_token(identity=user.id)
         return {"access_token": access_token, "refresh_token": refresh_token}
-
-
-class CreateAdminUseCase(UseCase):
-    def __init__(self, unit_of_work: Optional[BaseUnitfWork] = None) -> None:
-        super().__init__(unit_of_work)
-
-    def execute(self, data: dict[str, Any]) -> dict[str, Any]:
-        with self.unit_of_work as uow:
-            user = User(
-                first_name=data["first_name"],
-                last_name=data["last_name"],
-                email_address=data["email_address"],
-                password=User.hash_password(data["password"]),
-                role="admin",
-                account_activated=1,
-            )
-            uow.repository.add(user)
-        activation_token = User.generate_admin_token(user.id)
-        data = {"admin": dataclasses.asdict(user), "admin_token": activation_token}
-        return data
