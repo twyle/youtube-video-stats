@@ -6,7 +6,7 @@ API and then passing in the resource to the appropriate route.
 
 Examples:
     To get a YouTube Video's data::
-        $ get_video(video_id='9mdadNspP_M')
+        $ get_video_by_id(video_id='9mdadNspP_M')
         
     To save the YouTube Video to database, you make a ``POST`` request to the video endpoint 
     i.e '/api/v1/video`` passing in the video data::
@@ -21,6 +21,7 @@ Args:
     client_secrets_file (str): This string represents the path to the clients' secret file 
         downloaded from Google API. It contains the authentication details for accessing the 
         YouTube API.
+    admin_token (str): The administrator token. This token enables you to create resources.
     youtube (youtube.YouTube): The YouTube instance that provides the methods for interacting 
         with the YouTube API.
         
@@ -48,7 +49,9 @@ from youtube.models.video_model import Video as YouTubeVideo
 load_dotenv()
 
 client_secrets_file = os.environ["SECRET_FILE"]
+admin_token = os.environ["ADMIN_TOKEN"]
 youtube = YouTube(client_secrets_file)
+youtube.authenticate()
 
 
 def get_video_by_id(video_id: str) -> YouTubeVideo:
@@ -169,7 +172,6 @@ def post_data(data: dict[str, ResourceType], url: str) -> Response:
     KeyError:
         If the ADMIN_TOKEN environment variable is not set.
     """
-    admin_token = os.environ["ADMIN_TOKEN"]
     headers = {"Authorization": f"Bearer {admin_token}"}
 
     resp: Response = requests.post(url, json=data, headers=headers)
